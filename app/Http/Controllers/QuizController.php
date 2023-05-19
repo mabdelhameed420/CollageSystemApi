@@ -24,6 +24,7 @@ class QuizController extends Controller
             'lecturer_id' => $request->lecturer_id,
             'number_questions' => $request->number_questions,
             'course_id' => $request->course_id
+  
         ]);
 
         return response()->json([

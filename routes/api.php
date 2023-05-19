@@ -59,12 +59,9 @@ Route::get('/lecturer/get', LecturerController::class . '@index');
 Route::get('/lecturer/login/{national_id}/{password}', LecturerController::class . '@login');
 Route::get('/lecturer/getLecturersById/{id}', LecturerController::class . '@getLecturerById');
 Route::get('/lecturer/getClassroomByLecturerId/{id}', LecturerController::class . '@getClassroomByLecturerId');
-//~======================================================
+
 //? 4==>================= department ====================
-//!======================================================
-//^======================================================
-//&======================================================
-//*======================================================
+
 Route::get('/department/get', DepartmentController::class . '@index');
 Route::post('/department/add', DepartmentController::class . '@store');
 Route::post('/department/update', DepartmentController::class . '@update');
