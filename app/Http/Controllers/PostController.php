@@ -14,18 +14,34 @@ class PostController extends Controller
     public function store(Request $request)
     {
         $post = Post::create($request->all());
-        $title = $request->input('title');
         $body = $request->input('content');
         $tokens = Student::whereNotNull('fcm_token')->pluck('fcm_token')->all();
-        $data = [
-            'title' => $title,
-            'body' => $body,
-        ];
-
+        if ($request->student_id != null) {
+            $student = Student::find($request->student_id);
+            $data = [
+                'title' => "تم اضافة منشور جديد من " . $student->firstname . ' ' . $student->lastname,
+                'body' => $body,
+            ];
+        } else if ($request->student_affairs_id != null) {
+            $student_affair = StudentAffair::find($request->student_affairs_id);
+            $data = [
+                'title' => "تم اضافة منشور جديد من " . $student_affair->firstname . ' ' . $student_affair->lastname,
+                'body' => $body,
+            ];
+        } else if ($request->lecturer_id != null) {
+            $lecturer = Lecturer::find($request->lecturer_id);
+            $data = [
+                'title' => "تم اضافة منشور جديد من " . $lecturer->firstname . ' ' . $lecturer->lastname,
+                'body' => $body,
+            ];
+        }
         $payload = [
             'registration_ids' => $tokens,
             'notification' => $data,
-            'data' => $data,
+            'data' => [
+                'volume' => '3.21.15',
+                'contents' => 'http://www.news-magazine.com/world-week/21659772',
+            ],
         ];
 
         $headers = [
@@ -50,6 +66,7 @@ class PostController extends Controller
             $post->image = $filename;
         }
         $post->save();
+
         return response()->json([
             'message' => 'Post created successfully.',
             'data' => $post,

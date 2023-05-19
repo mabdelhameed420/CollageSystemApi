@@ -3,11 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Events\MessageSent;
+use App\Models\Chat;
 use Illuminate\Http\Request;
 use App\Models\Message;
 use App\Models\Student;
 use App\Models\Lecturer;
 use App\Models\Classroom;
+use App\Models\StudentAffair;
+use Mockery\Matcher\Not;
 
 class MessageController extends Controller
 {
@@ -21,10 +24,25 @@ class MessageController extends Controller
             $file->move('images/messages/', $filename);
             $message->image = $filename;
         }
+        $chat = Chat::find($request->input('chat_id'));
+        if ($chat->student_sender_id != null) {
+            $student = Student::find($chat->student_sender_id);
+            $username = $student->firstname . ' ' . $student->lastname;
+        } else if ($chat->lecturer_sender_id != null) {
+            $lecturer = Lecturer::find($chat->lecturer_sender_id);
+            $username = $lecturer->firstname . ' ' . $lecturer->lastname;
+        } else {
+            $student_affair = StudentAffair::find($chat->student_affair_sender_id);
+            $username = $student_affair->firstname . ' ' . $student_affair->lastname;
+        }
+
+
+        $message->sentAt = date('H:i:s A');
         event(new MessageSent(
-            $request->sender,
-            $request->content
+            $username,
+            $message
         ));
+
 
         $message->save();
         return response()->json([
@@ -54,6 +72,7 @@ class MessageController extends Controller
         $message->sender = $request->input('sender');
         $message->receiver = $request->input('receiver');
         $message->save();
+
 
         return response()->json([
             'message' => 'Message updated successfully',

@@ -26,6 +26,7 @@ class Post extends Model
         'student_affairs_id',
         'lecturer_id'
 
+
     ];
 
 

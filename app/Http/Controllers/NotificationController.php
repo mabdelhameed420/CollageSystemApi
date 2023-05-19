@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use App\Models\Student;
 
 class NotificationController extends Controller
@@ -14,6 +13,7 @@ class NotificationController extends Controller
         $fcm_token = $request->fcm_token;
         $title = $request->title;
         $message = $request->body;
+        $type = $request->type;
         $url = "https://fcm.googleapis.com/fcm/send";
         $header = [
             'authorization: key=' . 'AAAAjfF8Wec:APA91bEWxNWtrsJ99bucIsqsA_QCpga1OFNOBoOMRwiFZpkGE1F0oLO84hZNEYxWj3KuMcjlaO6_icPysdIeIBFjpAkxNns70u8focMYTzcrnNxfPqaNdd2i3rZRJOr_eMY5hOGE_K0T',
@@ -49,7 +49,8 @@ class NotificationController extends Controller
             [
                 'success' => true,
                 'message' => 'Notification send successfully.',
-                'data' => json_decode($result)
+                'data' => json_decode($result),
+                'type' => $type
             ]
         );
     }
@@ -60,6 +61,7 @@ class NotificationController extends Controller
 
         $tokens = Student::whereNotNull('fcm_token')->pluck('fcm_token')->all();
 
+
         $data = [
             'title' => $title,
             'body' => $body,
@@ -67,7 +69,7 @@ class NotificationController extends Controller
 
         $payload = [
             'registration_ids' => $tokens,
-            'notification' => $data,
+            'notificastion' => $data,
             'data' => $data,
         ];
 

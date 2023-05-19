@@ -123,6 +123,10 @@ class ClassroomController extends Controller
             $classroom->course_name = isset($courseNames[$classroom->course_id]) ? $courseNames[$classroom->course_id] : null;
             return $classroom;
         });
+        foreach ($classrooms as $classroom) {
+            $lecturer = Lecturer::where('id', $classroom->lecturer_id)->first();
+            $classroom->lecturer_name = $lecturer->firstname . ' ' . $lecturer->lastname;
+        }
 
         return response([
             'message' => 'classrooms department',
