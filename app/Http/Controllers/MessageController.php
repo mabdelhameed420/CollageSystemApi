@@ -34,6 +34,8 @@ class MessageController extends Controller
         } else {
             $student_affair = StudentAffair::find($chat->student_affair_sender_id);
             $username = $student_affair->firstname . ' ' . $student_affair->lastname;
+            
+            
         }
 
 

@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\AddPost;
 use Illuminate\Http\Request;
 use App\Models\Post;
 use App\Models\StudentAffair;
 use App\Models\Student;
 use App\Models\Lecturer;
-
 class PostController extends Controller
 {
 
@@ -22,18 +22,21 @@ class PostController extends Controller
                 'title' => "تم اضافة منشور جديد من " . $student->firstname . ' ' . $student->lastname,
                 'body' => $body,
             ];
+            event(new AddPost($post, $student));
         } else if ($request->student_affairs_id != null) {
             $student_affair = StudentAffair::find($request->student_affairs_id);
             $data = [
                 'title' => "تم اضافة منشور جديد من " . $student_affair->firstname . ' ' . $student_affair->lastname,
                 'body' => $body,
             ];
+            event(new AddPost($post, $student_affair));
         } else if ($request->lecturer_id != null) {
             $lecturer = Lecturer::find($request->lecturer_id);
             $data = [
                 'title' => "تم اضافة منشور جديد من " . $lecturer->firstname . ' ' . $lecturer->lastname,
                 'body' => $body,
             ];
+            event(new AddPost($post, $lecturer));
         }
         $payload = [
             'registration_ids' => $tokens,

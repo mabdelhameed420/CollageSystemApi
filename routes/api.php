@@ -156,6 +156,7 @@ Route::post('/question/delete', QuestionController::class . '@delete');
 Route::get('/question/get', QuestionController::class . '@index');
 Route::get('/question/getQuestionsByQuizId', QuestionController::class . '@getQuestionsByQuizId');
 Route::get('/question/getQuestionsByQuizIdAndLecturerId/{quiz_id}/{lecturer_id}', QuestionController::class . '@getQuestionsByQuizIdAndLecturerId');
+Route::get('/question/push-quiz/{quiz_id}', QuestionController::class . '@addQuiz');
 
 
 //? 15==>================= rating ======================
