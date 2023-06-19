@@ -15,10 +15,10 @@ class ReactPost implements ShouldBroadcast
     /**
      * Create a new event instance.
      */
-    public $post;
-    public function __construct( $post)
+    public $likes;
+    public function __construct( $likes)
     {
-        $this->post = $post;
+        $this->likes = $likes;
     }
 
     /**
