@@ -129,7 +129,7 @@ Route::delete('/posts/delete/{id}/{student_id}', PostController::class . '@delet
 Route::delete('/posts/deletebystudentid/{id}/{student_id}', PostController::class . '@checkStudentIsPostStudentAndDelete');
 Route::delete('/posts/deletebylecturerid/{id}/{lecturer_id}', PostController::class . '@checkLecturerIsPostLecturerAndDelete');
 Route::delete('/posts/deletebystudentaffairsid/{id}/{student_affairs_id}', PostController::class . '@checkStudentAffairsIsPostStudentAffairsAndDelete');
-
+Route::get('/posts/searchInPosts/{search}', PostController::class . '@searchInPosts');
 //? 11==>================= comment ====================
 Route::post('/comment/add', CommentController::class . '@store');
 Route::post('/comment/update', CommentController::class . '@update');
