@@ -264,6 +264,6 @@ class PostController extends Controller
         return response()->json([
             'message' => 'Post updated successfully.',
             'data' => $likes
-        ], 200);
+        ], 200);//->toOthers();
     }
 }
