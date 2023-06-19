@@ -24,18 +24,21 @@ class MessageController extends Controller
             $file->move('images/messages/', $filename);
             $message->image = $filename;
         }
-        $chat = Chat::find($request->input('chat_id'));
-        if ($chat->student_sender_id != null) {
-            $student = Student::find($chat->student_sender_id);
-            $username = $student->firstname . ' ' . $student->lastname;
-        } else if ($chat->lecturer_sender_id != null) {
-            $lecturer = Lecturer::find($chat->lecturer_sender_id);
-            $username = $lecturer->firstname . ' ' . $lecturer->lastname;
-        } else {
-            $student_affair = StudentAffair::find($chat->student_affair_sender_id);
-            $username = $student_affair->firstname . ' ' . $student_affair->lastname;
-            
-            
+        $username = '';
+        if ($request->chat_id!=null) {
+            $chat = Chat::find($request->input('chat_id'));
+            if ($chat->student_sender_id != null) {
+                $student = Student::find($chat->student_sender_id);
+                $username = $student->firstname . ' ' . $student->lastname;
+            } else if ($chat->lecturer_sender_id != null) {
+                $lecturer = Lecturer::find($chat->lecturer_sender_id);
+                $username = $lecturer->firstname . ' ' . $lecturer->lastname;
+            } else {
+                $student_affair = StudentAffair::find($chat->student_affair_sender_id);
+                $username = $student_affair->firstname . ' ' . $student_affair->lastname;
+
+
+            }
         }
 
 
