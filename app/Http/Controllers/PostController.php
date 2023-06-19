@@ -256,9 +256,11 @@ class PostController extends Controller
     public function addRectOnPost($id)
     {
         $post = Post::find($id);
-        $likes=$post->likes+1;
-        $post->save();
-        event(new ReactPost($post));
+        $likes=$post->likes;
+        $likes++;
+
+        $post->update(['likes' => $likes]);
+        event(new ReactPost($likes));
         return response()->json([
             'message' => 'Post updated successfully.',
             'data' => $likes
