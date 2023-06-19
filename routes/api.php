@@ -140,7 +140,7 @@ Route::get('/comment/get', CommentController::class . '@index');
 Route::get('/comment/getCommentsByPostId/{post_id}', CommentController::class . '@getCommentsByPostId');
 
 //? 12==>================= reply comment ====================
-
+//
 Route::post('/reply-comment/add', ReplyCommentController::class . '@store');
 Route::post('/reply-comment/update', ReplyCommentController::class . '@update');
 Route::post('/reply-comment/delete', ReplyCommentController::class . '@delete');
