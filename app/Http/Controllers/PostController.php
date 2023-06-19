@@ -3,11 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Events\AddPost;
+use App\Events\ReactPost;
 use Illuminate\Http\Request;
 use App\Models\Post;
 use App\Models\StudentAffair;
 use App\Models\Student;
 use App\Models\Lecturer;
+use Laravel\Ui\Presets\React;
+
 class PostController extends Controller
 {
 
@@ -255,7 +258,7 @@ class PostController extends Controller
         $post = Post::find($id);
         $likes=$post->likes+1;
         $post->save();
-
+        event(new ReactPost($post));
         return response()->json([
             'message' => 'Post updated successfully.',
             'data' => $likes
