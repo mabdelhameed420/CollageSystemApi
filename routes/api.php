@@ -115,6 +115,7 @@ Route::get('/classroom/get', ClassroomController::class . '@index');
 Route::get('/classroom/getClassroomsByDepartmentId/{id}', ClassroomController::class . '@getClassroomsByDepartmentId');
 Route::get('/classroom/getCourseNameByClassroomId/{classroom_id}', ClassroomController::class . '@getCourseNameByClassroomId');
 Route::get('/classroom/getClassroomByLecturerId/{lecturer_id}', ClassroomController::class . '@getClassroomByLecturerId');
+Route::get('/classroom/livestrated/{classroom_id}', ClassroomController::class . '@stratLive');
 //? 10==>================= post ====================
 Route::post('/post/add', PostController::class . '@store');
 Route::post('/post/update', PostController::class . '@update');
