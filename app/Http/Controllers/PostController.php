@@ -257,8 +257,6 @@ class PostController extends Controller
     {
         $post = Post::find($id);
         $likes=$post->likes;
-        $likes++;
-
         $post->update(['likes' => $likes]);
         event(new ReactPost($likes));
         return response()->json([
