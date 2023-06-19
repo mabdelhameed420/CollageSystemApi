@@ -9,6 +9,7 @@ use App\Models\Post;
 use App\Models\StudentAffair;
 use App\Models\Student;
 use App\Models\Lecturer;
+use Illuminate\Routing\Route;
 use Laravel\Ui\Presets\React;
 
 class PostController extends Controller
@@ -253,12 +254,12 @@ class PostController extends Controller
             'data' => $posts
         ], 200);
     }
-    public function addRectOnPost($id)
+    public function addRectOnPost($id, $likes)
     {
         $post = Post::find($id);
         $likes=$post->likes;
         $post->update(['likes' => $likes]);
-        event(new ReactPost($likes));
+        event(new ReactPost($likes, $id));
         return response()->json([
             'message' => 'Post updated successfully.',
             'data' => $likes
