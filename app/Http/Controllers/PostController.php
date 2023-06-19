@@ -3,11 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Events\AddPost;
+use App\Events\ReactPost;
 use Illuminate\Http\Request;
 use App\Models\Post;
 use App\Models\StudentAffair;
 use App\Models\Student;
 use App\Models\Lecturer;
+use Laravel\Ui\Presets\React;
+
 class PostController extends Controller
 {
 
@@ -225,29 +228,6 @@ class PostController extends Controller
         return response()->json([
             'message' => 'Post deleted successfully.',
             'data' => $post
-        ], 200);
-    }
-    public function searchInPosts($search)
-    {
-        $posts = Post::where('content', 'LIKE', "%{$search}%")->get();
-        foreach ($posts as $post) {
-            if (!is_null($post->student_id)) {
-                $student = Student::where('id', $post->student_id)->first();
-                $post->person_name = $student->firstname . ' ' . $student->lastname;
-                $post->person_image = $student->image;
-            } else if (!is_null($post->lecturer_id)) {
-                $lecturer = Lecturer::where('id', $post->lecturer_id)->first();
-                $post->person_name = $lecturer->firstname . ' ' . $lecturer->lastname;
-                $post->person_image = $lecturer->image;
-            } else {
-                $studentAffairs = StudentAffair::where('id', $post->student_affairs_id)->first();
-                $post->person_name = $studentAffairs->firstname . ' ' . $studentAffairs->lastname;
-                $post->person_image = $studentAffairs->image;
-            }
-        }
-        return response()->json([
-            'message' => 'Posts retrieved successfully.',
-            'data' => $posts
         ], 200);
     }
 }

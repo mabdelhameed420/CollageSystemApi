@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\CommentPosted;
 use Illuminate\Http\Request;
 
 use App\Models\Comment;
@@ -21,6 +22,7 @@ class CommentController extends Controller
             'lecturer_id' => $request->lecturer_id,
             'post_id' => $request->post_id
         ]);
+        event(new CommentPosted($comment));
         return response()->json([
             'message' => 'Comment created successfully.',
             'data' => $comment

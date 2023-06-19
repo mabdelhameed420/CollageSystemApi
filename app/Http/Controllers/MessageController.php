@@ -24,7 +24,7 @@ class MessageController extends Controller
             $file->move('images/messages/', $filename);
             $message->image = $filename;
         }
-        $username = '';
+        $username = '';//
         if ($request->chat_id!=null) {
             $chat = Chat::find($request->input('chat_id'));
         if ($chat->student_sender_id != null) {
