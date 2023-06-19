@@ -64,6 +64,7 @@ class MessageController extends Controller
     }
     public function update(Request $request)
     {
+        //
         $message = Message::find($request->input('id'));
         $message->content = $request->input('content');
         $message->sentAt = now();
