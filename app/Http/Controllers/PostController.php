@@ -265,5 +265,5 @@ class PostController extends Controller
             'message' => 'Post updated successfully.',
             'data' => $likes
         ], 200);
-    }
+    }// Path: app\Http\Controllers\PostController.php
 }
