@@ -83,7 +83,7 @@ class ClassroomController extends Controller
         $classroom = Classroom::find($id);
         $classroom->is_live = true;
         $lecturer = Lecturer::find($classroom->lecturer_id);
-        $students= Student::where('department_id',$classroom->department_id)->get();
+        $students= Student::where('department_id',$lecturer->department_id)->get();
         event(new LiveAdded($students, $lecturer, $classroom));
         $data = [
             'title' => "تم بدا محاضرة مباشر من الدكتور " . $lecturer->firstname . ' ' . $lecturer->lastname,
@@ -117,7 +117,6 @@ class ClassroomController extends Controller
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
-        $result = curl_exec($ch);
         curl_close($ch);
         return response()->json([
             'message' => 'live started successfully',

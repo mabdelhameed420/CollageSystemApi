@@ -27,18 +27,18 @@ class MessageController extends Controller
         $username = '';//
         if ($request->chat_id!=null) {
             $chat = Chat::find($request->input('chat_id'));
-            if ($chat->student_sender_id != null) {
-                $student = Student::find($chat->student_sender_id);
-                $username = $student->firstname . ' ' . $student->lastname;
-            } else if ($chat->lecturer_sender_id != null) {
-                $lecturer = Lecturer::find($chat->lecturer_sender_id);
-                $username = $lecturer->firstname . ' ' . $lecturer->lastname;
-            } else {
-                $student_affair = StudentAffair::find($chat->student_affair_sender_id);
-                $username = $student_affair->firstname . ' ' . $student_affair->lastname;
-
-
-            }
+        if ($chat->student_sender_id != null) {
+            $student = Student::find($chat->student_sender_id);
+            $username = $student->firstname . ' ' . $student->lastname;
+        } else if ($chat->lecturer_sender_id != null) {
+            $lecturer = Lecturer::find($chat->lecturer_sender_id);
+            $username = $lecturer->firstname . ' ' . $lecturer->lastname;
+        } else {
+            $student_affair = StudentAffair::find($chat->student_affair_sender_id);
+            $username = $student_affair->firstname . ' ' . $student_affair->lastname;
+            
+            
+        }
         }
 
 
@@ -67,7 +67,6 @@ class MessageController extends Controller
     }
     public function update(Request $request)
     {
-        //
         $message = Message::find($request->input('id'));
         $message->content = $request->input('content');
         $message->sentAt = now();
