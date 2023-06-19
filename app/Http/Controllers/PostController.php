@@ -262,7 +262,7 @@ class PostController extends Controller
         event(new ReactPost($likes, $request->id));
         return response()->json([
             'message' => 'Post updated successfully.',
-            'data' => $likes
+            'likes' => $post->likes
         ], 200);//->toOthers();
 
     }
