@@ -478,8 +478,6 @@ class ChatController extends Controller
                 $reciver = StudentAffair::where('id', $reciver_id)->first();
                 $chat->reciver_name = $reciver->firstname . ' ' . $reciver->lastname;
                 $chat->reciver_image = $reciver->image;
-            } else {
-                $chats = [];
             }
         }
         return response()->json([
