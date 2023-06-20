@@ -110,6 +110,12 @@ class LecturerController extends Controller
     public function destroy($id)
     {
         $lecturer = Lecturer::findOrFail($id);
+        if (!$lecturer) {
+            return response()->json([
+                'message' => 'Lecturer not found',
+                'data' => null
+            ], 404);
+        }
 
         $lecturer->delete();
 
