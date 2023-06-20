@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Events\LiveAdded;
 use App\Models\Classroom;
 use App\Models\Lecturer;
-use App\Models\Realtime;
 use App\Models\Realtimes;
 use App\Models\Student;
 use Illuminate\Routing\Route;
@@ -15,7 +14,6 @@ class RealtimeController extends Controller
     public function stratLive($id)
     {
         $classroom = Classroom::find($id);
-        $classroom->is_live = true;
         $lecturer = Lecturer::find($classroom->lecturer_id);
         $students= Student::where('department_id',$lecturer->department_id)->get();
         event(new LiveAdded($students, $lecturer, $classroom));
@@ -54,14 +52,21 @@ class RealtimeController extends Controller
         curl_close($ch);
         $result = curl_exec($ch);
         foreach($students as $student){
-            $realtime = new Realtimes();
-            $realtime->student_id = $student->id;
-            $realtime->lecturer_id = $lecturer->id;
-            $realtime->is_online = false;
-            $realtime->is_quiz_started = false;
-            $realtime->is_quiz_finished = false;
-            $realtime->is_live = true;
-            $realtime->save();
+            $realtime =Realtimes::where('student_id',$student->id)->first();
+            if($realtime == null){
+                $realtime = new Realtimes();
+                $realtime->student_id = $student->id;
+                $realtime->lecturer_id = $lecturer->id;
+                $realtime->is_online = false;
+                $realtime->is_quiz_started = false;
+                $realtime->is_quiz_finished = false;
+                $realtime->is_live = true;
+                $realtime->save();
+            }else{
+                $realtime->update(['is_live' => true]);
+                $realtime->save();
+            }
+
         }
 
         return response()->json([
