@@ -8,7 +8,7 @@ use App\Models\Lecturer;
 use App\Models\Realtime;
 use App\Models\Realtimes;
 use App\Models\Student;
-use GuzzleHttp\Psr7\Request;
+use Illuminate\Routing\Route;
 
 class RealtimeController extends Controller
 {
@@ -52,7 +52,7 @@ class RealtimeController extends Controller
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
         curl_close($ch);
-                $result = curl_exec($ch);
+        $result = curl_exec($ch);
         foreach($students as $student){
             $realtime = new Realtimes();
             $realtime->student_id = $student->id;
@@ -72,5 +72,39 @@ class RealtimeController extends Controller
 
         ]);
     }
+    public function updateStatus($student_id,$is_online)
+    {
+        $realtime = Realtimes::where('student_id', $student_id)->first();
+        $realtime->is_online = $is_online;
+        $realtime->save();
+        return response()->json([
+            'message' => 'student status updated successfully',
+            'data' => $realtime,
+            'statue' => 200,
+        ]);
+    }
+    public function finishLive($student_id,$is_live)
+    {
+        $realtime = Realtimes::where('student_id', $student_id)->first();
+        $realtime->is_live = $is_live;
+        $realtime->save();
+        return response()->json([
+            'message' => 'live finished successfully',
+            'data' => $realtime,
+            'statue' => 200,
+        ]);
+    }
+    public function startQuiz($student_id,$is_quiz_started)
+    {
+        $realtime = Realtimes::where('student_id', $student_id)->first();
+        $realtime->is_quiz_started = $is_quiz_started;
+        $realtime->save();
+        return response()->json([
+            'message' => 'quiz started successfully',
+            'data' => $realtime,
+            'statue' => 200,
+        ]);
+    }
+
 
 }
