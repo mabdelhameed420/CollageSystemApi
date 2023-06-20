@@ -4,13 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Events\LiveAdded;
 use App\Models\Classroom;
-use App\Models\Course;
 use App\Models\Lecturer;
-use App\Models\Realtime;
 use App\Models\Student;
-use Illuminate\Http\Request;
 
-class ControllerRealtime extends Controller
+class RealtimeController extends Controller
 {
     public function stratLive($id)
     {
