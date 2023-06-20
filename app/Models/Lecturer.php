@@ -66,4 +66,8 @@ class Lecturer extends Model
     {
         return $this->hasMany(Classroom::class);
     }
+    public function realtime()
+    {
+        return $this->hasMany(Realtime::class);
+    }
 }

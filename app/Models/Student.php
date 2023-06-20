@@ -59,4 +59,8 @@ class Student extends Model
     {
         return $this->hasMany(Rating::class);
     }
+    public function realtime()
+    {
+        return $this->hasMany(Realtime::class);
+    }
 }
