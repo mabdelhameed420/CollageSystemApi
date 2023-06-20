@@ -77,6 +77,33 @@ class RealtimeController extends Controller
 
         ]);
     }
+    public function closeLive($id){
+        $classroom = Classroom::find($id);
+        $lecturer = Lecturer::find($classroom->lecturer_id);
+        $students= Student::where('department_id',$lecturer->department_id)->get();
+        foreach($students as $student){
+            $realtime =Realtimes::where('student_id',$student->id)->first();
+            if($realtime == null){
+                $realtime = new Realtimes();
+                $realtime->student_id = $student->id;
+                $realtime->lecturer_id = $lecturer->id;
+                $realtime->is_online = false;
+                $realtime->is_quiz_started = false;
+                $realtime->is_quiz_finished = false;
+                $realtime->is_live = false;
+                $realtime->save();
+            }else{
+                $realtime->update(['is_live' => false]);
+                $realtime->save();
+            }
+
+        }
+        return response()->json([
+            'message' => 'live closed successfully',
+            'data' => $classroom,
+            'statue' => 200,
+        ]);
+    }
     public function updateStatus($student_id,$is_online)
     {
         $realtime = Realtimes::where('student_id', $student_id)->first();
