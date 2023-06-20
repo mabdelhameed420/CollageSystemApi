@@ -61,6 +61,6 @@ class Student extends Model
     }
     public function realtime()
     {
-        return $this->hasMany(Realtime::class);
+        return $this->hasMany(Realtimes::class);
     }
 }
