@@ -76,6 +76,7 @@ class RealtimeController extends Controller
     {
         $realtime = Realtimes::where('student_id', $student_id)->first();
         $realtime->is_online = $is_online;
+        $realtime->update(['is_online' => $is_online]);
         $realtime->save();
         return response()->json([
             'message' => 'student status updated successfully',
@@ -87,6 +88,8 @@ class RealtimeController extends Controller
     {
         $realtime = Realtimes::where('student_id', $student_id)->first();
         $realtime->is_live = $is_live;
+        //update is_live to false in database
+        $realtime->update(['is_live' => $is_live]);
         $realtime->save();
         return response()->json([
             'message' => 'live finished successfully',
@@ -98,6 +101,7 @@ class RealtimeController extends Controller
     {
         $realtime = Realtimes::where('student_id', $student_id)->first();
         $realtime->is_quiz_started = $is_quiz_started;
+        $realtime->update(['is_quiz_started' => $is_quiz_started]);
         $realtime->save();
         return response()->json([
             'message' => 'quiz started successfully',
