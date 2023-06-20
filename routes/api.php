@@ -17,7 +17,8 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\RatingController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\NotificationController;
-use App\Models\Realtime;
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -174,4 +175,4 @@ Route::post('/rating/add', RatingController::class . '@store');
 Route::post('/notification/sendNotification', NotificationController::class . '@sendNotification');
 Route::post('/notification/sendNotificationsForAllStudents', NotificationController::class . '@sendNotificationForAllUsersByFCMToken');
 //? 17==>================= realtime ======================
-Route::get('/classroom/realtime/{classroom_id}', Realtime::class . '@stratLive');
+Route::get('/realtime/livestrated/{classroom_id}', ClassroomController::class . '@stratLive');
