@@ -314,6 +314,10 @@ class ChatController extends Controller
                 'student_affairs_reciver_id' => $request->student_affairs_reciver_id,
 
             ]);
+            return response()->json([
+                'message' => 'Chat created successfully.',
+                'data' => $chat
+            ], 201);
         }
     }
     public function show(Chat $chat)
