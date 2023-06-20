@@ -6,6 +6,7 @@ use App\Events\LiveAdded;
 use App\Models\Classroom;
 use App\Models\Lecturer;
 use App\Models\Realtime;
+use App\Models\Realtimes;
 use App\Models\Student;
 use GuzzleHttp\Psr7\Request;
 
@@ -53,7 +54,7 @@ class RealtimeController extends Controller
         curl_close($ch);
                 $result = curl_exec($ch);
         foreach($students as $student){
-            $realtime = new Realtime();
+            $realtime = new Realtimes();
             $realtime->student_id = $student->id;
             $realtime->lecturer_id = $lecturer->id;
             $realtime->is_online = false;
@@ -71,5 +72,5 @@ class RealtimeController extends Controller
 
         ]);
     }
- 
+
 }
