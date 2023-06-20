@@ -51,6 +51,7 @@ Route::get('student/login/{national_id}/{password}', StudentController::class . 
 Route::get('student/getAllStudentByDepartmentId/{departmentId}', StudentController::class . '@getAllStudentByDepartmentId');
 Route::post('/student/{student_id}/update-fcm-token', [StudentController::class, 'updateFcmTokenByStudentId']);
 Route::get('/student/all', StudentController::class . '@getAllStudents');
+Route::delete('/student/delete/{id}', StudentController::class . '@destroy');
 
 //? 3==>==================Lecturer============================
 Route::post('/lecturer/add', LecturerController::class . '@store');
@@ -61,6 +62,7 @@ Route::get('/lecturer/login/{national_id}/{password}', LecturerController::class
 Route::get('/lecturer/getLecturersById/{id}', LecturerController::class . '@getLecturerById');
 Route::get('/lecturer/getClassroomByLecturerId/{id}', LecturerController::class . '@getClassroomByLecturerId');
 Route::get('/lecturer/all', LecturerController::class . '@getAllLecturers');
+Route::delete('/lecturer/delete/{id}', LecturerController::class . '@destroy');
 
 //? 4==>================= department ====================
 
@@ -87,10 +89,10 @@ Route::get('/chat/getChatsByStudentAffairId/{student_affair_id}', ChatController
 //? 6==>================= course ====================
 Route::post('/course/add', CourseController::class . '@store');
 Route::post('/course/update', CourseController::class . '@update');
-Route::post('/course/delete', CourseController::class . '@delete');
 Route::get('/course/get', CourseController::class . '@index');
 Route::get('/course/all', CourseController::class . '@getAllCourses');
 Route::get('/course/getCoursesByDepartmentId/{id}', CourseController::class . '@getCoursesByDepartmentId');
+Route::delete('/course/delete/{id}', CourseController::class . '@destroy');
 
 
 //? 7==>================= Message ====================
