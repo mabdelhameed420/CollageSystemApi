@@ -77,13 +77,13 @@ class StudentController extends Controller
         $student = Student::findOrFail($id);
         if(!$student){
             return response()->json([
-                'message' => 'Student not found!',
+                'message' => 'الطالب غير موجود',
                 'data' => null
             ], 404);
         }
         $student->delete();
         return response()->json([
-            'message' => 'Student deleted successfully',
+            'message' => 'تم حذف الطالب بنجاح',
             'data' => $student
         ], 201);
     }

@@ -51,14 +51,14 @@ class CourseController extends Controller
 
         if (!$course) {
             return response()->json([
-                'message' => 'Course not found',
+                'message' => 'المقرر غير موجود',
                 'data' => null,
                 'status' => 404
             ], 404);
         }
 
         return response()->json([
-            'message' => 'Course retrieved successfully',
+            'message' => 'تم استرجاع المقرر بنجاح',
             'data' => $course,
             'status' => 200
         ], 200);
@@ -70,7 +70,7 @@ class CourseController extends Controller
 
         if (!$course) {
             return response()->json([
-                'message' => 'Course not found',
+                'message' => 'المقرر غير موجود',
                 'data' => null,
                 'status' => 404
             ], 404);
@@ -84,7 +84,7 @@ class CourseController extends Controller
         $course->save();
 
         return response()->json([
-            'message' => 'Course updated successfully',
+            'message' => 'تم تعديل المقرر بنجاح',
             'data' => $course,
             'status' => 200
         ], 200);
@@ -96,7 +96,7 @@ class CourseController extends Controller
 
         if (!$course) {
             return response()->json([
-                'message' => 'Course not found',
+                'message' => 'المقرر غير موجود',
                 'data' => null,
                 'status' => 404
             ], 404);
@@ -105,7 +105,7 @@ class CourseController extends Controller
         $course->delete();
 
         return response()->json([
-            'message' => 'Course deleted successfully',
+            'message' => 'تم حذف المقرر بنجاح',
             'data' => $course,
             'status' => 200
         ], 200);
@@ -119,7 +119,7 @@ class CourseController extends Controller
         }
 
         return response()->json([
-            'message' => 'Courses retrieved successfully',
+            'message' => 'تم استرجاع المقررات بنجاح',
             'data' => $courses,
             'status' => 200
         ], 200);
@@ -128,7 +128,7 @@ class CourseController extends Controller
     {
         $courses = Course::where('department_id', $department_id)->get();
         return response()->json([
-            'message' => 'Courses retrieved successfully',
+            'message' => 'تم استرجاع المقررات بنجاح',
             'data' => $courses,
             'status' => 200
         ], 200);

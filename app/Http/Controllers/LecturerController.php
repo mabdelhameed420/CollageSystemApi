@@ -112,7 +112,7 @@ class LecturerController extends Controller
         $lecturer = Lecturer::findOrFail($id);
         if (!$lecturer) {
             return response()->json([
-                'message' => 'Lecturer not found',
+                'message' => 'المحاضر غير موجود',
                 'data' => null
             ], 404);
         }
@@ -120,7 +120,7 @@ class LecturerController extends Controller
         $lecturer->delete();
 
         return response()->json([
-            'message' => 'Lecturer deleted successfully',
+            'message' => 'تم حذف المحاضر بنجاح',
             'data' => $lecturer
         ], 201);
     }
