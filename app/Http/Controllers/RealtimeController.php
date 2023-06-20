@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Events\LiveAdded;
 use App\Models\Classroom;
 use App\Models\Lecturer;
+use App\Models\Realtime;
 use App\Models\Student;
+use GuzzleHttp\Psr7\Request;
 
 class RealtimeController extends Controller
 {
@@ -49,10 +51,25 @@ class RealtimeController extends Controller
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
         curl_close($ch);
+                $result = curl_exec($ch);
+        foreach($students as $student){
+            $realtime = new Realtime();
+            $realtime->student_id = $student->id;
+            $realtime->lecturer_id = $lecturer->id;
+            $realtime->is_online = false;
+            $realtime->is_quiz_started = false;
+            $realtime->is_quiz_finished = false;
+            $realtime->is_live = true;
+            $realtime->save();
+        }
+
         return response()->json([
             'message' => 'live started successfully',
             'data' => $classroom,
-            'statue' => 200
+            'statue' => 200,
+            'noti' => json_decode($result),
+
         ]);
     }
+ 
 }
