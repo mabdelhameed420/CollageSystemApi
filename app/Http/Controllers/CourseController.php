@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Course;
+use App\Models\Department;
 
 class CourseController extends Controller
 {
@@ -112,6 +113,10 @@ class CourseController extends Controller
     public function getAllCourses()
     {
         $courses = Course::all();
+        foreach ($courses as $course) {
+            $department=Department::find($course->department_id);
+            $course->department_name=$department->name;
+        }
 
         return response()->json([
             'message' => 'Courses retrieved successfully',
