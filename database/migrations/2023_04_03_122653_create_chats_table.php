@@ -21,13 +21,25 @@ return new class extends Migration
             $table->unsignedBigInteger('student_affairs_reciver_id')->nullable();
             $table->unsignedBigInteger('lecturer_reciver_id')->nullable();
             $table->timestamps();
-            $table->foreign('student_sender_id')->references('id')->on('students');
-            $table->foreign('student_affairs_sender_id')->references('id')->on('student_affairs');
-            $table->foreign('lecturer_sender_id')->references('id')->on('lecturers');
-            $table->foreign('student_reciver_id')->references('id')->on('students');
-            $table->foreign('student_affairs_reciver_id')->references('id')->on('student_affairs');
-            $table->foreign('lecturer_reciver_id')->references('id')->on('lecturers');
-        });
+            $table->foreign('student_sender_id')->references('id')->on('students')
+            ->onDelete('cascade')
+            ->onUpdate('cascade');
+        $table->foreign('student_affairs_sender_id')->references('id')->on('student_affairs')
+            ->onDelete('cascade')
+            ->onUpdate('cascade');
+        $table->foreign('lecturer_sender_id')->references('id')->on('lecturers'
+        )->onDelete('cascade')
+            ->onUpdate('cascade');
+        $table->foreign('student_reciver_id')->references('id')->on('students')
+            ->onDelete('cascade')
+            ->onUpdate('cascade');
+        $table->foreign('student_affairs_reciver_id')->references('id')->on('student_affairs')
+            ->onDelete('cascade')
+            ->onUpdate('cascade');
+        $table->foreign('lecturer_reciver_id')->references('id')->on('lecturers')
+            ->onDelete('cascade')
+            ->onUpdate('cascade');
+    });
     }
     /**
      * Reverse the migrations.
