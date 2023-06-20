@@ -302,6 +302,18 @@ class ChatController extends Controller
                     'data' => $chat
                 ], 201);
             }
+
+
+        }if(!is_null($request->lecturer_sender_id) ){
+            $chat=Chat::create([
+                'lecturer_sender_id' => $request->lecturer_sender_id,
+                'lecturer_reciver_id' => $request->lecturer_reciver_id,
+                'student_sender_id' => $request->student_sender_id,
+                'student_reciver_id' => $request->student_reciver_id,
+                'student_affairs_sender_id' => $request->student_affairs_sender_id,
+                'student_affairs_reciver_id' => $request->student_affairs_reciver_id,
+
+            ]);
         }
     }
     public function show(Chat $chat)
