@@ -145,4 +145,13 @@ class StudentController extends Controller
             'data' => $student
         ], 200);
     }
+    public function getAllStudents()
+    {
+        $students = Student::all();
+        return response()->json([
+            'message' => 'Students retrieved successfully',
+            'data' => $students,
+            'statue' => 200
+        ]);
+    }
 }

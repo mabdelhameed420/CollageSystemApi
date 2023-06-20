@@ -50,6 +50,7 @@ Route::get('/student/get', StudentController::class . '@index');
 Route::get('student/login/{national_id}/{password}', StudentController::class . '@login');
 Route::get('student/getAllStudentByDepartmentId/{departmentId}', StudentController::class . '@getAllStudentByDepartmentId');
 Route::post('/student/{student_id}/update-fcm-token', [StudentController::class, 'updateFcmTokenByStudentId']);
+Route::get('/student/all', StudentController::class . '@getAllStudents');
 
 //? 3==>==================Lecturer============================
 Route::post('/lecturer/add', LecturerController::class . '@store');
@@ -59,6 +60,7 @@ Route::get('/lecturer/get', LecturerController::class . '@index');
 Route::get('/lecturer/login/{national_id}/{password}', LecturerController::class . '@login');
 Route::get('/lecturer/getLecturersById/{id}', LecturerController::class . '@getLecturerById');
 Route::get('/lecturer/getClassroomByLecturerId/{id}', LecturerController::class . '@getClassroomByLecturerId');
+Route::get('/lecturer/all', LecturerController::class . @'getAllLecturers');
 
 //? 4==>================= department ====================
 

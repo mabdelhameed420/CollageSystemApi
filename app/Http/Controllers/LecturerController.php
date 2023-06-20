@@ -193,4 +193,12 @@ class LecturerController extends Controller
             'body' => $body
         ];
     }
+    public function getAllLecturers()
+    {
+        $lecturers = Lecturer::all();
+        return response()->json([
+            'message' => 'Lecturers retrieved successfully',
+            'data' => $lecturers
+        ], 200);
+    }
 }
