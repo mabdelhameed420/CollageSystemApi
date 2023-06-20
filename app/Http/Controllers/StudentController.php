@@ -148,6 +148,11 @@ class StudentController extends Controller
     public function getAllStudents()
     {
         $students = Student::all();
+        //get department name by department id
+        foreach ($students as $student) {
+            $department = Department::find($student->department_id);
+            $student->department_name = $department->name;
+        }
         return response()->json([
             'message' => 'Students retrieved successfully',
             'data' => $students,
