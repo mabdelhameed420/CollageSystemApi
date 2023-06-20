@@ -21,11 +21,11 @@ return new class extends Migration
             $table->dateTime('timestamp');
             $table->unsignedBigInteger('comment_id');
             $table->unsignedBigInteger('post_id');
-            $table->foreign('post_id')->references('id')->on('posts')->onDelete('cascade');
-            $table->foreign('comment_id')->references('id')->on('comments')->onDelete('cascade');
-            $table->foreign('student_id')->references('id')->on('students')->onDelete('cascade');
-            $table->foreign('student_affairs_id')->references('id')->on('student_affairs')->onDelete('cascade');
-            $table->foreign('lecturer_id')->references('id')->on('lecturers')->onDelete('cascade');
+            $table->foreign('post_id')->references('id')->on('posts')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('comment_id')->references('id')->on('comments')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('student_id')->references('id')->on('students')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('student_affairs_id')->references('id')->on('student_affairs')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('lecturer_id')->references('id')->on('lecturers')->onDelete('cascade')->onUpdate('cascade');
 
             $table->timestamps();
         });

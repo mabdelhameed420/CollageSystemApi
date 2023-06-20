@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('answer_d');
             $table->integer('correct_answer');
             $table->unsignedBigInteger('quiz_id');
-            $table->foreign('quiz_id')->references('id')->on('quizzes')->onDelete('cascade');
+            $table->foreign('quiz_id')->references('id')->on('quizzes')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
     }

@@ -25,7 +25,9 @@ return new class extends Migration
             $table->string('responsible_level');
             $table->string('date_added');
             $table->string('password');
-            $table->foreign('admin_id')->references('id')->on('admins');
+            $table->foreign('admin_id')->references('id')->on('admins')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
             $table->timestamps();
         });
     }
