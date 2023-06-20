@@ -177,5 +177,5 @@ Route::post('/notification/sendNotificationsForAllStudents', NotificationControl
 //? 17==>================= realtime ======================
 Route::get('/realtime/livestrated/{classroom_id}', RealtimeController::class . '@stratLive');
 Route::post('/realtime/updateStatus/{student_id}/{is_online}', RealtimeController::class . '@updateStatus');
-Route::post('/realtime/isQuizStarted/{student_id/{is_quiz_started}', RealtimeController::class . '@startQuiz');
+Route::post('/realtime/isQuizStarted/{student_id}/{is_quiz_started}', RealtimeController::class . '@startQuiz');
 Route::post('/realtime/finishLive/{student_id}/{is_live}', RealtimeController::class . '@finishLive');
