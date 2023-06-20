@@ -17,8 +17,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\RatingController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\NotificationController;
-
-
+use App\Models\Realtime;
 
 /*
 |--------------------------------------------------------------------------
@@ -119,7 +118,6 @@ Route::get('/classroom/get', ClassroomController::class . '@index');
 Route::get('/classroom/getClassroomsByDepartmentId/{id}', ClassroomController::class . '@getClassroomsByDepartmentId');
 Route::get('/classroom/getCourseNameByClassroomId/{classroom_id}', ClassroomController::class . '@getCourseNameByClassroomId');
 Route::get('/classroom/getClassroomByLecturerId/{lecturer_id}', ClassroomController::class . '@getClassroomByLecturerId');
-Route::get('/classroom/livestrated/{classroom_id}', ClassroomController::class . '@stratLive');
 //? 10==>================= post ====================
 Route::post('/post/add', PostController::class . '@store');
 Route::post('/post/update', PostController::class . '@update');
@@ -175,3 +173,5 @@ Route::post('/rating/add', RatingController::class . '@store');
 
 Route::post('/notification/sendNotification', NotificationController::class . '@sendNotification');
 Route::post('/notification/sendNotificationsForAllStudents', NotificationController::class . '@sendNotificationForAllUsersByFCMToken');
+//? 17==>================= realtime ======================
+Route::get('/classroom/realtime/{classroom_id}', Realtime::class . '@stratLive');
