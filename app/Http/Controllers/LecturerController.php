@@ -196,6 +196,10 @@ class LecturerController extends Controller
     public function getAllLecturers()
     {
         $lecturers = Lecturer::all();
+        foreach ($lecturers as $lecturer) {
+            $department = Department::find($lecturer->department_id);
+            $lecturer->department_name = $department->name;
+        }
         return response()->json([
             'message' => 'Lecturers retrieved successfully',
             'data' => $lecturers
