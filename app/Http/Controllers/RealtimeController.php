@@ -114,6 +114,42 @@ class RealtimeController extends Controller
             'statue' => 200,
         ]);
     }
+    public function getIsLive($student_id)
+    {
+        $realtime = Realtimes::where('student_id', $student_id)->first();
+        return response()->json([
+            'message' => 'get is live successfully',
+            'data' => $realtime,
+            'statue' => 200,
+        ]);
+    }
+    public function getIsQuizStarted($student_id)
+    {
+        $realtime = Realtimes::where('student_id', $student_id)->first();
+        return response()->json([
+            'message' => 'get is quiz started successfully',
+            'data' => $realtime,
+            'statue' => 200,
+        ]);
+    }
+    public function getIsQuizFinished($student_id)
+    {
+        $realtime = Realtimes::where('student_id', $student_id)->first();
+        return response()->json([
+            'message' => 'get is quiz finished successfully',
+            'data' => $realtime,
+            'statue' => 200,
+        ]);
+    }
+    public function getIsOnline($student_id)
+    {
+        $realtime = Realtimes::where('student_id', $student_id)->first();
+        return response()->json([
+            'message' => 'get is online successfully',
+            'data' => $realtime,
+            'statue' => 200,
+        ]);
+    }
 
 
 }

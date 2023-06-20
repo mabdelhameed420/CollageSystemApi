@@ -179,3 +179,7 @@ Route::get('/realtime/livestrated/{classroom_id}', RealtimeController::class . '
 Route::post('/realtime/updateStatus/{student_id}/{is_online}', RealtimeController::class . '@updateStatus');
 Route::post('/realtime/isQuizStarted/{student_id}/{is_quiz_started}', RealtimeController::class . '@startQuiz');
 Route::post('/realtime/finishLive/{student_id}/{is_live}', RealtimeController::class . '@finishLive');
+Route::get('/realtime/isLive/{student_id}', RealtimeController::class . '@getIsLive');
+Route::get('/realtime/isQuizStarted/{student_id}', RealtimeController::class . '@getIsQuizStarted');
+Route::get('/realtime/isOnline/{student_id}', RealtimeController::class . '@getIsOnline');
+
