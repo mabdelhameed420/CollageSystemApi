@@ -60,7 +60,7 @@ Route::get('/lecturer/get', LecturerController::class . '@index');
 Route::get('/lecturer/login/{national_id}/{password}', LecturerController::class . '@login');
 Route::get('/lecturer/getLecturersById/{id}', LecturerController::class . '@getLecturerById');
 Route::get('/lecturer/getClassroomByLecturerId/{id}', LecturerController::class . '@getClassroomByLecturerId');
-Route::get('/lecturer/all', LecturerController::class . @'getAllLecturers');
+Route::get('/lecturer/all', LecturerController::class . '@getAllLecturers');
 
 //? 4==>================= department ====================
 
