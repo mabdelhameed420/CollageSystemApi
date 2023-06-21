@@ -124,7 +124,7 @@ class RealtimeController extends Controller
                 $realtime->student_id = $student->id;
                 $realtime->lecturer_id = $quiz->lecturer_id;
                 $realtime->is_online = false;
-                $realtime->is_quiz_started = false;
+                $realtime->is_quiz_started = true;
                 $realtime->is_quiz_finished = false;
                 $realtime->is_live = false;
                 $realtime->save();
