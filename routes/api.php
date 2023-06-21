@@ -77,7 +77,7 @@ Route::get('/department/{id}', DepartmentController::class . '@getDepartmentById
 
 //? 5==>================= chat ====================
 Route::post('/chat/update', ChatController::class . '@update');
-Route::post('/chat/delete/{id}', ChatController::class . '@destroy');
+Route::delete('/chat/delete/{id}', ChatController::class . '@destroy');
 Route::get('/chat/get', ChatController::class . '@index');
 Route::post('/chat/add', ChatController::class . '@store');
 Route::get('/chat/getMessages/{chat_id}', ChatController::class . '@getMessagesByChatId');
