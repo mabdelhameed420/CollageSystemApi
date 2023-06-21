@@ -302,10 +302,9 @@ class ChatController extends Controller
                     'data' => $chat
                 ], 201);
             }
-
-
-        }if(!is_null($request->lecturer_sender_id) ){
-            $chat=Chat::create([
+        }
+        if (!is_null($request->lecturer_sender_id)) {
+            $chat = Chat::create([
                 'lecturer_sender_id' => $request->lecturer_sender_id,
                 'lecturer_reciver_id' => $request->lecturer_reciver_id,
                 'student_sender_id' => $request->student_sender_id,
@@ -494,18 +493,16 @@ class ChatController extends Controller
                 $reciver = StudentAffair::where('id', $reciver_id)->first();
                 $chat->reciver_name = $reciver->firstname . ' ' . $reciver->lastname;
                 $chat->reciver_image = $reciver->image;
-            }
-            if ($chat->lecturer_sender != null
+            } else if (
+                $chat->lecturer_sender != null
                 && $chat->student_reciver_id == null
-                &&$chat->student_affairs_reciver_id == null
+                && $chat->student_affairs_reciver_id == null
                 && $chat->lecturer_reciver_id == null
                 && $chat->student_affairs_sender_id == null
-                && $chat->student_sender_id == null) {
-                return response()->json([
-                    'message' => 'Chats retrieved successfully.',
-                    'data' => null,
-                    'statue' => 200
-                ], 200);
+                && $chat->student_sender_id == null
+            ) {
+                $chats = [];
+            }
         }
         return response()->json([
             'message' => 'Chats retrieved successfully.',
