@@ -461,20 +461,7 @@ class ChatController extends Controller
             ->orWhere('lecturer_reciver_id', $lecturer_id)
             ->get();
         foreach ($chats as $chat) {
-            if (
-                $chat->lecturer_sender_id != null
-                && $chat->student_reciver_id == null
-                && $chat->student_affairs_reciver_id == null
-                && $chat->lecturer_reciver_id == null
-                && $chat->student_affairs_sender_id == null
-                && $chat->student_sender_id == null
-            ) {
-                return response()->json([
-                    'message' => 'Chats retrieved successfully.',
-                    'data' => [],
-                    'statue' => 200
-                ], 200);
-            } else if ($chat->lecturer_reciver_id != null && $chat->lecturer_sender_id != null) {
+            if ($chat->lecturer_reciver_id != null && $chat->lecturer_sender_id != null) {
                 if ($chat->lecturer_reciver_id == $lecturer_id) {
                     $sender_id = $chat->lecturer_sender_id;
                     $sender = Lecturer::where('id', $sender_id)->first();
@@ -506,6 +493,20 @@ class ChatController extends Controller
                 $reciver = StudentAffair::where('id', $reciver_id)->first();
                 $chat->reciver_name = $reciver->firstname . ' ' . $reciver->lastname;
                 $chat->reciver_image = $reciver->image;
+            }
+            if (
+                $chat->lecturer_sender_id != null
+                && $chat->student_reciver_id == null
+                && $chat->student_affairs_reciver_id == null
+                && $chat->lecturer_reciver_id == null
+                && $chat->student_affairs_sender_id == null
+                && $chat->student_sender_id == null
+            ) {
+                return response()->json([
+                    'message' => 'Chats retrieved successfully.',
+                    'data' => [],
+                    'statue' => 200
+                ], 200);
             }
         }
         return response()->json([

@@ -100,6 +100,7 @@ class RealtimeController extends Controller
                 $realtime->save();
             }
         }
+        event(new LiveAdded($students, $lecturer, $classroom));
         return response()->json([
             'message' => 'live closed successfully',
             'data' => $classroom,
