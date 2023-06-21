@@ -3,8 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Events\LiveAdded;
+use App\Events\QuizAdded;
 use App\Models\Classroom;
+use App\Models\Course;
 use App\Models\Lecturer;
+use App\Models\Question;
+use App\Models\Quiz;
 use App\Models\Realtimes;
 use App\Models\Student;
 use Illuminate\Routing\Route;
@@ -103,6 +107,86 @@ class RealtimeController extends Controller
             'data' => $classroom,
             'statue' => 200,
         ]);
+    }
+    public function addQuiz($quiz_id){
+        $quiz = Quiz::find($quiz_id);
+        $course = Course::find($quiz->course_id);
+        $classroom = Classroom::find($quiz->classroom_id);
+        $students = Student::where('department_id', $course->department_id)->get();
+        $tokens=[];
+        foreach ($students as $student) {
+            if ($student->fcm_token != null) {
+                array_push($tokens, $student->fcm_token);
+            }
+            $realtime =Realtimes::where('student_id',$student->id)->first();
+            if($realtime == null){
+                $realtime = new Realtimes();
+                $realtime->student_id = $student->id;
+                $realtime->lecturer_id = $quiz->lecturer_id;
+                $realtime->is_online = false;
+                $realtime->is_quiz_started = false;
+                $realtime->is_quiz_finished = false;
+                $realtime->is_live = false;
+                $realtime->save();
+        }else{
+            $realtime->update(['is_quiz_started' => true]);
+            $realtime->save();
+        }
+        }
+        $lecturer =Lecturer::find($quiz->lecturer_id);
+
+        if (!$quiz) {
+            return response()->json([
+                'message' => 'Quiz not found'
+            ], 404);
+        }
+        $data = [
+            'title' => $quiz->title,
+            'body' => 'تم اضافة اختبار جديد لمادة ' . $course->name .  ' من قبل ' . $lecturer->firstname . ' ' . $lecturer->lastname . ' للفصل الدراسي '
+            . $classroom->name . '  الرجاء الضغط علي رساله لدخول الاختبارات ' .' مده الاختبار هي ' . $quiz->limit_time . ' دقيقه'  .' '. 'من الان',
+            'sound' => 'default',
+            'color' => '#203E78',
+        ];
+        $customData=[
+            'notification_type'=>'quizAdded',
+            'quiz_id'=>$quiz->id,
+            'quiz_time'=>$quiz->limit_time,
+            'quiz_title'=>$quiz->title,
+            'course_name'=>$course->name,
+            'classroom_name'=>$classroom->name,
+            'lecturer_name'=>$lecturer->firstname . ' ' . $lecturer->lastname,
+        ];
+        $payload = [
+            'data' => [
+                'notification_type'=>'quizAdded',
+                'quiz_id'=>$quiz->id,
+
+            ],
+            'registration_ids' => $tokens,
+            'notification' => $data,
+            'priority' => 'high',
+            'messge_type' => 'quizAdded'
+        ];
+
+        $headers = [
+            'authorization: key=' . 'AAAAjfF8Wec:APA91bEWxNWtrsJ99bucIsqsA_QCpga1OFNOBoOMRwiFZpkGE1F0oLO84hZNEYxWj3KuMcjlaO6_icPysdIeIBFjpAkxNns70u8focMYTzcrnNxfPqaNdd2i3rZRJOr_eMY5hOGE_K0T',
+            'Content-Type: application/json',
+        ];
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+        $result = curl_exec($ch);
+        curl_close($ch);
+        $questions = Question::where('quiz_id', $quiz->id)->get();
+        event(new QuizAdded($quiz, $questions,$lecturer,$classroom));
+        return response()->json([
+            'message' => 'push notification sent successfully for students',
+            'data' => $questions,
+            'result' => json_decode($result,true)
+        ], 201);
     }
     public function updateStatus($student_id,$is_online)
     {

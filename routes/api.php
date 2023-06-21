@@ -162,7 +162,6 @@ Route::post('/question/delete', QuestionController::class . '@delete');
 Route::get('/question/get', QuestionController::class . '@index');
 Route::get('/question/getQuestionsByQuizId', QuestionController::class . '@getQuestionsByQuizId');
 Route::get('/question/getQuestionsByQuizIdAndLecturerId/{quiz_id}/{lecturer_id}', QuestionController::class . '@getQuestionsByQuizIdAndLecturerId');
-Route::get('/question/push-quiz/{quiz_id}', QuestionController::class . '@addQuiz');
 
 
 //? 15==>================= rating ======================
@@ -183,4 +182,5 @@ Route::post('/realtime/finishLive/{student_id}/{is_live}', RealtimeController::c
 Route::get('/realtime/isLive/{student_id}', RealtimeController::class . '@getIsLive');
 Route::get('/realtime/isQuizStarted/{student_id}', RealtimeController::class . '@getIsQuizStarted');
 Route::get('/realtime/isOnline/{student_id}', RealtimeController::class . '@getIsOnline');
+Route::get('/realtime/push-quiz/{quiz_id}', QuestionController::class . '@addQuiz');
 
