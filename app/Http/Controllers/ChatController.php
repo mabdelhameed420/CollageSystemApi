@@ -516,4 +516,15 @@ class ChatController extends Controller
             'statue' => 200
         ], 200);
     }
+    public function deleteChatById($chat_id)
+    {
+        $chat = Chat::findOrFail($chat_id);
+        $chat->delete();
+
+        return response()->json([
+            'message' => 'Chat deleted successfully.',
+            'data' => $chat,
+            'statue' => 200
+        ], 200);
+    }
 }
