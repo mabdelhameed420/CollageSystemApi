@@ -493,8 +493,7 @@ class ChatController extends Controller
                 $reciver = StudentAffair::where('id', $reciver_id)->first();
                 $chat->reciver_name = $reciver->firstname . ' ' . $reciver->lastname;
                 $chat->reciver_image = $reciver->image;
-            }
-            if (
+            } else if (
                 $chat->lecturer_sender_id != null
                 && $chat->student_reciver_id == null
                 && $chat->student_affairs_reciver_id == null
