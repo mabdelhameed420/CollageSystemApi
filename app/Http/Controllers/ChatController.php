@@ -333,8 +333,9 @@ class ChatController extends Controller
             'statue' => 200
         ], 200);
     }
-    public function destroy(Chat $chat)
+    public function destroy($id)
     {
+        $chat = Chat::findOrFail($id);
         $chat->delete();
 
         return response()->json([
@@ -343,6 +344,7 @@ class ChatController extends Controller
             'statue' => 200
         ], 200);
     }
+
     public function getMessagesByChatId($chat_id)
     {
         $messages = Message::join('chats', 'chats.id', '=', 'messages.chat_id')

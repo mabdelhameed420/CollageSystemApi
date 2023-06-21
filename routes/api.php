@@ -77,7 +77,7 @@ Route::get('/department/{id}', DepartmentController::class . '@getDepartmentById
 
 //? 5==>================= chat ====================
 Route::post('/chat/update', ChatController::class . '@update');
-Route::post('/chat/delete', ChatController::class . '@delete');
+Route::post('/chat/delete/{id}', ChatController::class . '@destroy');
 Route::get('/chat/get', ChatController::class . '@index');
 Route::post('/chat/add', ChatController::class . '@store');
 Route::get('/chat/getMessages/{chat_id}', ChatController::class . '@getMessagesByChatId');
@@ -184,4 +184,3 @@ Route::get('/realtime/isQuizStarted/{student_id}', RealtimeController::class . '
 Route::get('/realtime/isOnline/{student_id}', RealtimeController::class . '@getIsOnline');
 Route::get('/realtime/push-quiz/{quiz_id}', RealtimeController::class . '@addQuiz');
 Route::get('/realtime/end-quiz/{quiz_id}', RealtimeController::class . '@endQuiz');
-
