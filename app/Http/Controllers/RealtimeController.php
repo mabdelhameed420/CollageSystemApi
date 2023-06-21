@@ -202,6 +202,11 @@ class RealtimeController extends Controller
             $realtime->save();
         }
         }
+        return response()->json([
+            'message' => 'quiz ended successfully',
+            'data' => $quiz,
+            'statue' => 200,
+        ]);
 
     }
     public function updateStatus($student_id,$is_online)
