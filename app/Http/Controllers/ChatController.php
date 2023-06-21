@@ -493,12 +493,6 @@ class ChatController extends Controller
                 $reciver = StudentAffair::where('id', $reciver_id)->first();
                 $chat->reciver_name = $reciver->firstname . ' ' . $reciver->lastname;
                 $chat->reciver_image = $reciver->image;
-            } else {
-                return response()->json([
-                    'message' => 'Chats retrieved successfully.',
-                    'data' => [],
-                    'statue' => 200
-                ], 200);
             }
         }
         return response()->json([
