@@ -248,8 +248,7 @@ class RealtimeController extends Controller
     public function getIsLive($student_id)
     {
         $realtime = Realtimes::where('student_id', $student_id)->first();
-        $quiz = Quiz::where('id', $realtime->quiz_id)->first();
-        $realtime->quiz = $quiz;
+
 
         return response()->json([
             'message' => 'get is live successfully',
@@ -260,6 +259,8 @@ class RealtimeController extends Controller
     public function getIsQuizStarted($student_id)
     {
         $realtime = Realtimes::where('student_id', $student_id)->first();
+        $quiz = Quiz::where('id', $realtime->quiz_id)->first();
+        $realtime->quiz = $quiz;
         return response()->json([
             'message' => 'get is quiz started successfully',
             'data' => $realtime,
