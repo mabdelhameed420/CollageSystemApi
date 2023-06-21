@@ -16,13 +16,14 @@ return new class extends Migration
             $table->timestamps();
             $table->unsignedBigInteger('student_id');
             $table->unsignedBigInteger('lecturer_id');
+            $table->unsignedBigInteger('quiz_id');
             $table->boolean('is_online')->default(false);
             $table->boolean('is_quiz_started')->default(false);
             $table->boolean('is_quiz_finished')->default(false);
             $table->boolean('is_live')->default(false);
             $table->foreign('student_id')->references('id')->on('students')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('lecturer_id')->references('id')->on('lecturers')->onDelete('cascade')->onUpdate('cascade');
-
+            $table->foreign('quiz_id')->references('id')->on('quizzes')->onDelete('cascade')->onUpdate('cascade');
 
         });
     }

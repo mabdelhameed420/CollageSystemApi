@@ -12,9 +12,9 @@ class Realtimes extends Model
     protected $fillable = [
         'student_id',
         'lecturer_id',
+        'quiz_id',
         'is_online',
         'is_quiz_started',
-        'is_quiz_finished',
         'is_live'
 
     ];
@@ -25,6 +25,10 @@ class Realtimes extends Model
     public function lecturer()
     {
         return $this->belongsTo(Lecturer::class);
+    }
+    public function quiz()
+    {
+        return $this->belongsTo(Quiz::class);
     }
 
 
