@@ -503,7 +503,7 @@ class ChatController extends Controller
                 && $chat->student_sender_id == null) {
                 return response()->json([
                     'message' => 'Chats retrieved successfully.',
-                    'data' => [],
+                    'data' => null,
                     'statue' => 200
                 ], 200);
         }
