@@ -471,7 +471,7 @@ class ChatController extends Controller
             ) {
                 return response()->json([
                     'message' => 'Chats retrieved successfully.',
-                    'data' => $chats,
+                    'data' => [],
                     'statue' => 200
                 ], 200);
             } else if ($chat->lecturer_reciver_id != null && $chat->lecturer_sender_id != null) {
