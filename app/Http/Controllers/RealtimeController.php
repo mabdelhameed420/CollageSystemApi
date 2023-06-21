@@ -11,7 +11,6 @@ use App\Models\Question;
 use App\Models\Quiz;
 use App\Models\Realtimes;
 use App\Models\Student;
-use Illuminate\Routing\Route;
 
 class RealtimeController extends Controller
 {
@@ -19,7 +18,7 @@ class RealtimeController extends Controller
     {
         $classroom = Classroom::find($id);
         $lecturer = Lecturer::find($classroom->lecturer_id);
-        $students= Student::where('department_id',$lecturer->department_id)->get();
+        $students = Student::where('department_id', $lecturer->department_id)->get();
         event(new LiveAdded($students, $lecturer, $classroom));
         $data = [
             'title' => "تم بدا محاضرة مباشر من الدكتور " . $lecturer->firstname . ' ' . $lecturer->lastname,
@@ -55,9 +54,9 @@ class RealtimeController extends Controller
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
         curl_close($ch);
         $result = curl_exec($ch);
-        foreach($students as $student){
-            $realtime =Realtimes::where('student_id',$student->id)->first();
-            if($realtime == null){
+        foreach ($students as $student) {
+            $realtime = Realtimes::where('student_id', $student->id)->first();
+            if ($realtime == null) {
                 $realtime = new Realtimes();
                 $realtime->student_id = $student->id;
                 $realtime->lecturer_id = $lecturer->id;
@@ -66,11 +65,10 @@ class RealtimeController extends Controller
                 $realtime->is_quiz_finished = false;
                 $realtime->is_live = true;
                 $realtime->save();
-            }else{
+            } else {
                 $realtime->update(['is_live' => true]);
                 $realtime->save();
             }
-
         }
 
         return response()->json([
@@ -81,13 +79,14 @@ class RealtimeController extends Controller
 
         ]);
     }
-    public function closeLive($id){
+    public function closeLive($id)
+    {
         $classroom = Classroom::find($id);
         $lecturer = Lecturer::find($classroom->lecturer_id);
-        $students= Student::where('department_id',$lecturer->department_id)->get();
-        foreach($students as $student){
-            $realtime =Realtimes::where('student_id',$student->id)->first();
-            if($realtime == null){
+        $students = Student::where('department_id', $lecturer->department_id)->get();
+        foreach ($students as $student) {
+            $realtime = Realtimes::where('student_id', $student->id)->first();
+            if ($realtime == null) {
                 $realtime = new Realtimes();
                 $realtime->student_id = $student->id;
                 $realtime->lecturer_id = $lecturer->id;
@@ -96,11 +95,10 @@ class RealtimeController extends Controller
                 $realtime->is_quiz_finished = false;
                 $realtime->is_live = false;
                 $realtime->save();
-            }else{
+            } else {
                 $realtime->update(['is_live' => false]);
                 $realtime->save();
             }
-
         }
         return response()->json([
             'message' => 'live closed successfully',
@@ -108,29 +106,30 @@ class RealtimeController extends Controller
             'statue' => 200,
         ]);
     }
-    public function addQuiz($quiz_id){
+    public function addQuiz($quiz_id)
+    {
         $quiz = Quiz::find($quiz_id);
         $course = Course::find($quiz->course_id);
         $classroom = Classroom::find($quiz->classroom_id);
         $students = Student::where('department_id', $course->department_id)->get();
-        $tokens=[];
+        $tokens = [];
         foreach ($students as $student) {
             if ($student->fcm_token != null) {
                 array_push($tokens, $student->fcm_token);
             }
-            $realtime =Realtimes::where('student_id',$student->id)->first();
-            if($realtime == null){
+            $realtime = Realtimes::where('student_id', $student->id)->first();
+            if ($realtime == null) {
                 $realtime = new Realtimes();
                 $realtime->student_id = $student->id;
                 $realtime->lecturer_id = $quiz->lecturer_id;
                 $realtime->is_quiz_started = true;
                 $realtime->save();
-        }else{
-            $realtime->update(['is_quiz_started' => true]);
-            $realtime->save();
+            } else {
+                $realtime->update(['is_quiz_started' => true]);
+                $realtime->save();
+            }
         }
-        }
-        $lecturer =Lecturer::find($quiz->lecturer_id);
+        $lecturer = Lecturer::find($quiz->lecturer_id);
 
         if (!$quiz) {
             return response()->json([
@@ -140,23 +139,23 @@ class RealtimeController extends Controller
         $data = [
             'title' => $quiz->title,
             'body' => 'تم اضافة اختبار جديد لمادة ' . $course->name .  ' من قبل ' . $lecturer->firstname . ' ' . $lecturer->lastname . ' للفصل الدراسي '
-            . $classroom->name . '  الرجاء الضغط علي رساله لدخول الاختبارات ' .' مده الاختبار هي ' . $quiz->limit_time . ' دقيقه'  .' '. 'من الان',
+                . $classroom->name . '  الرجاء الضغط علي رساله لدخول الاختبارات ' . ' مده الاختبار هي ' . $quiz->limit_time . ' دقيقه'  . ' ' . 'من الان',
             'sound' => 'default',
             'color' => '#203E78',
         ];
-        $customData=[
-            'notification_type'=>'quizAdded',
-            'quiz_id'=>$quiz->id,
-            'quiz_time'=>$quiz->limit_time,
-            'quiz_title'=>$quiz->title,
-            'course_name'=>$course->name,
-            'classroom_name'=>$classroom->name,
-            'lecturer_name'=>$lecturer->firstname . ' ' . $lecturer->lastname,
+        $customData = [
+            'notification_type' => 'quizAdded',
+            'quiz_id' => $quiz->id,
+            'quiz_time' => $quiz->limit_time,
+            'quiz_title' => $quiz->title,
+            'course_name' => $course->name,
+            'classroom_name' => $classroom->name,
+            'lecturer_name' => $lecturer->firstname . ' ' . $lecturer->lastname,
         ];
         $payload = [
             'data' => [
-                'notification_type'=>'quizAdded',
-                'quiz_id'=>$quiz->id,
+                'notification_type' => 'quizAdded',
+                'quiz_id' => $quiz->id,
 
             ],
             'registration_ids' => $tokens,
@@ -178,38 +177,38 @@ class RealtimeController extends Controller
         $result = curl_exec($ch);
         curl_close($ch);
         $questions = Question::where('quiz_id', $quiz->id)->get();
-        event(new QuizAdded($quiz, $questions,$lecturer,$classroom));
+        event(new QuizAdded($quiz, $questions, $lecturer, $classroom));
         return response()->json([
             'message' => 'push notification sent successfully for students',
             'data' => $questions,
-            'result' => json_decode($result,true)
+            'result' => json_decode($result, true)
         ], 201);
     }
-    public function endQuiz($quiz_id){
+    public function endQuiz($quiz_id)
+    {
         $quiz = Quiz::find($quiz_id);
         $course = Course::find($quiz->course_id);
         $students = Student::where('department_id', $course->department_id)->get();
         foreach ($students as $student) {
-            $realtime =Realtimes::where('student_id',$student->id)->first();
-            if($realtime == null){
+            $realtime = Realtimes::where('student_id', $student->id)->first();
+            if ($realtime == null) {
                 $realtime = new Realtimes();
                 $realtime->student_id = $student->id;
                 $realtime->lecturer_id = $quiz->lecturer_id;
                 $realtime->is_quiz_started = false;
                 $realtime->save();
-        }else{
-            $realtime->update(['is_quiz_started' => false]);
-            $realtime->save();
-        }
+            } else {
+                $realtime->update(['is_quiz_started' => false]);
+                $realtime->save();
+            }
         }
         return response()->json([
             'message' => 'quiz ended successfully',
             'data' => $quiz,
             'statue' => 200,
         ]);
-
     }
-    public function updateStatus($student_id,$is_online)
+    public function updateStatus($student_id, $is_online)
     {
         $realtime = Realtimes::where('student_id', $student_id)->first();
         $realtime->is_online = $is_online;
@@ -221,7 +220,7 @@ class RealtimeController extends Controller
             'statue' => 200,
         ]);
     }
-    public function finishLive($student_id,$is_live)
+    public function finishLive($student_id, $is_live)
     {
         $realtime = Realtimes::where('student_id', $student_id)->first();
         $realtime->is_live = $is_live;
@@ -234,7 +233,7 @@ class RealtimeController extends Controller
             'statue' => 200,
         ]);
     }
-    public function startQuiz($student_id,$is_quiz_started)
+    public function startQuiz($student_id, $is_quiz_started)
     {
         $realtime = Realtimes::where('student_id', $student_id)->first();
         $realtime->is_quiz_started = $is_quiz_started;
@@ -249,8 +248,8 @@ class RealtimeController extends Controller
     public function getIsLive($student_id)
     {
         $realtime = Realtimes::where('student_id', $student_id)->first();
-        $quiz=Quiz::where('id',$realtime->quiz_id)->first();
-        $realtime->quiz=$quiz;
+        $quiz = Quiz::where('id', $realtime->quiz_id)->first();
+        $realtime->quiz = $quiz;
 
         return response()->json([
             'message' => 'get is live successfully',
@@ -285,6 +284,4 @@ class RealtimeController extends Controller
             'statue' => 200,
         ]);
     }
-
-
 }

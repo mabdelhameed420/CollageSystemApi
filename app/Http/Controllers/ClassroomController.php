@@ -104,6 +104,12 @@ class ClassroomController extends Controller
     public function getLecturerClassrooms(Request $request)
     {
         $classrooms = Classroom::where('lecturer_id', $request->input('lecturer_id'))->get();
+        foreach ($classrooms as $classroom) {
+            $course = Course::where('id', $classroom->course_id)->first();
+            $classroom->course_name = $course->name;
+            $lecturer = Lecturer::where('id', $classroom->lecturer_id)->first();
+            $classroom->lecturer_name = $lecturer->firstname . ' ' . $lecturer->lastname;
+        }
         return response()->json([
             'message' => 'Classrooms retrieved successfully',
             'data' => $classrooms,
