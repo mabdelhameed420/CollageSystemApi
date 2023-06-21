@@ -494,7 +494,13 @@ class ChatController extends Controller
                 $chat->reciver_name = $reciver->firstname . ' ' . $reciver->lastname;
                 $chat->reciver_image = $reciver->image;
             }
+            if ($chat->student_sender_id == null && $chat->student_affairs_sender_id == null && $chat->lecturer_sender_id == null && $chat->student_reciver_id == null && $chat->student_affairs_reciver_id == null && $chat->lecturer_reciver_id == null) {
+
+                //remove this chat
+                $chat->delete();
+            }
         }
+
         return response()->json([
             'message' => 'Chats retrieved successfully.',
             'data' => $chats,
