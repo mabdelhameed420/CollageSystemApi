@@ -1,38 +1,38 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Http\Controllers\Controller;
 use App\Models\Classroom;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Lecturer;
 use App\Models\Department;
+use App\Traits\GeneralTraits;
+use Illuminate\Support\Facades\Auth;
 
 class LecturerController extends Controller
-{
+{    use GeneralTraits;
+
+    public function __construct()
+    {
+        $this->middleware('checkToken:api-lecturers', ['except' => ['login']]);
+    }
+
     public function index()
     {
         $lecturers = Lecturer::with('department')->get();
-        return response()->json([
-            'message' => 'Lecturers retrieved successfully',
-            'data' => $lecturers
-        ], 200);
+        return $this-> returnData('lecturers',$lecturers,);;
     }
 
-    public function show($id)
+    public function show(Request $request)
     {
-        $lecturer = Lecturer::with('department')->find($id);
+        $lecturer = Lecturer::with('department')->find($request->id);
 
         if (!$lecturer) {
-            return response()->json([
-                'message' => 'Lecturer not found',
-                'data' => null
-            ], 404);
+            return $this->returnError('201',"lecturer not found");;
         }
-        return response()->json([
-            'message' => 'Lecturer retrieved successfully',
-            'data' => $lecturer
-        ], 200);
+        return $this->returnData('lecturer',$lecturer);;
     }
 
     public function store(Request $request)
@@ -46,16 +46,12 @@ class LecturerController extends Controller
             'course_id' => 'required|integer|exists:courses,id',
             'phone_no' => 'required|string|unique:lecturers,phone_no',
             'password' => 'required|string|min:6',
-            'fcm_token' => 'nullable|string',
             'department_id' => 'required|integer|exists:departments,id'
 
         ]);
 
         if ($validator->fails()) {
-            return response()->json([
-                'message' => 'Validation failed',
-                'data' => $validator->errors()
-            ], 422);
+            return $this->returnValidationError('E001',$validator);
         }
 
         $image = null;
@@ -76,15 +72,12 @@ class LecturerController extends Controller
         ]);
         $lecturer->save();
 
-        return response()->json([
-            'message' => 'Lecturer created successfully',
-            'data' => $lecturer
-        ], 201);
+        return $this->returnData('lecturer',$lecturer);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        $lecturer = Lecturer::findOrFail($id);
+        $lecturer = Lecturer::findOrFail($request->lecturerid);
 
         $lecturer->update([
             'firstname' => $request->firstname,
@@ -99,68 +92,37 @@ class LecturerController extends Controller
         ]);
 
 
-        return response()->json([
-            'message' => 'Lecturer updated successfully',
-            'data' => $lecturer
-        ], 200);
+        return $this->returnData('lecturer',$lecturer);
     }
 
-    public function destroy($id)
+    public function destroy($request)
     {
-        $lecturer = Lecturer::findOrFail($id);
-        if (!$lecturer) {
-            return response()->json([
-                'message' => 'المحاضر غير موجود',
-                'data' => null
-            ], 404);
-        }
+        $lecturer = Lecturer::findOrFail($request->lecturer_id);
 
         $lecturer->delete();
 
-        return response()->json([
-            'message' => 'تم حذف المحاضر بنجاح',
-            'data' => $lecturer
-        ], 201);
+        return $this->returnSuccessMessage("deleted succcessfully");
     }
-    public function login($national_id, $password)
+    public function login(Request $request)
     {
-        $lecturer = Lecturer::where('national_id', $national_id)->first();
-        if ($lecturer) {
-            if (password_verify($password, $lecturer->password)) {
-                $department = Department::find($lecturer->department_id);
-                $lecturer->department_name = $department->name;
-                $lecturer->department_level = $department->level;
-                return response()->json([
-                    'message' => 'Lecturer logged in successfully',
-                    'data' => $lecturer
-                ], 200);
-            } else {
-                return response()->json([
-                    'message' => 'Password is incorrect',
-                    'data' => null
-                ], 404);
-            }
+        $credentials = request()->only('national_id', 'password');
+        $token =Auth::guard('api-lecturers')->attempt($credentials);
+        if (!$token) {
+            return $this->returnError("401","Unauthorized");
         } else {
-            return response()->json([
-                'message' => 'Lecturer not found',
-                'data' => null
-            ], 404);
+            $lecturer = Lecturer::where('national_id', $$request->national_id)->first();
+            $lecturer->api_token = $token;
+            return $this->returnData('lecturer_login', $lecturer, "lecturer login successfully");
         }
     }
-    public function getLecturerById($id)
+    public function getLecturerById(Request $request)
     {
-        $lecturer = Lecturer::with('department')->find($id);
+        $lecturer = Lecturer::with('department')->find($request->id);
 
         if (!$lecturer) {
-            return response()->json([
-                'message' => 'Lecturer not found',
-                'data' => null
-            ], 404);
+            return $this->returnError('',"lecturer don't exists");
         }
-        return response()->json([
-            'message' => 'Lecturer retrieved successfully',
-            'data' => $lecturer
-        ], 200);
+        return $this->returnData('lecturer',$lecturer);
     }
     public function getLecturerByCourseId($course_id)
     {
@@ -186,17 +148,13 @@ class LecturerController extends Controller
 
         ]);
     }
-    public function sendNotificationrToLecturer(Request $request)
+
+    public function logout()
     {
-        $lecturer = Lecturer::find($request->student_id);
-        $fcm_token = $lecturer->fcm_token;
-        $title = $request->title;
-        $body = $request->body;
-        $data = [
-            'title' => $title,
-            'body' => $body
-        ];
+        auth()->logout();
+        return $this->returnSuccessMessage('Successfully logged out');
     }
+
     public function getAllLecturers()
     {
         $lecturers = Lecturer::all();
@@ -208,5 +166,17 @@ class LecturerController extends Controller
             'message' => 'Lecturers retrieved successfully',
             'data' => $lecturers
         ], 200);
+    }
+
+    public function sendNotificationrToLecturer(Request $request)
+    {
+        $lecturer = Lecturer::find($request->student_id);
+        $fcm_token = $lecturer->fcm_token;
+        $title = $request->title;
+        $body = $request->body;
+        $data = [
+            'title' => $title,
+            'body' => $body
+        ];
     }
 }

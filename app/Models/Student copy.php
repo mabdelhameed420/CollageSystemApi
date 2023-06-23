@@ -9,9 +9,11 @@ use App\Models\Classroom;
 use App\Models\Comment;
 use App\Models\CommentReply;
 use App\Models\Post;
+use Tymon\JWTAuth\Contracts\JWTSubject;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-
-class Student extends Model
+class Student extends Authenticatable implements JWTSubject
 {
     use HasFactory;
     protected $fillable = [
@@ -21,7 +23,6 @@ class Student extends Model
         'email',
         'phone_no',
         'image',
-        'fcm_token',
         'password',
         'level',
         'state',
@@ -59,8 +60,28 @@ class Student extends Model
     {
         return $this->hasMany(Rating::class);
     }
-    public function realtime()
+    
+    use Notifiable;
+
+    // Rest omitted for brevity
+
+    /**
+     * Get the identifier that will be stored in the subject claim of the JWT.
+     *
+     * @return mixed
+     */
+    public function getJWTIdentifier()
     {
-        return $this->hasMany(Realtimes::class);
+        return $this->getKey();
+    }
+
+    /**
+     * Return a key value array, containing any custom claims to be added to the JWT.
+     *
+     * @return array
+     */
+    public function getJWTCustomClaims()
+    {
+        return [];
     }
 }

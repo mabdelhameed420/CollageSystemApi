@@ -5,10 +5,17 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\StudentAffair;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class StudentAffairController extends Controller
 {
+    
+    public function __construct()
+    {
+        $this->middleware('checkToken:api-affairs', ['except' => ['login', 'store']]);
+    }
+
     public function index()
     {
         $studentAffairs = StudentAffair::all();
@@ -31,7 +38,6 @@ class StudentAffairController extends Controller
             'image' => 'nullable|string',
             'admin_id' => 'required|integer|exists:admins,id',
             'password' => 'required|string',
-            'fcm_token' => 'nullable|string',
             'responsible_level' => 'required|string',
             'date_added' => 'required|string',
 
@@ -115,6 +121,7 @@ class StudentAffairController extends Controller
             'statue' => 200
         ], 200);
     }
+    
     public function destroy(StudentAffair $studentAffair)
     {
         $studentAffair->delete();
@@ -124,6 +131,7 @@ class StudentAffairController extends Controller
             'statue' => 200
         ], 200);
     }
+
     public function show(StudentAffair $studentAffair)
     {
         return response()->json([
@@ -132,29 +140,16 @@ class StudentAffairController extends Controller
             'statue' => 200
         ], 200);
     }
-    public function login($national_id, $password)
+    public function login(Request $request)
     {
-        $studentAffair = StudentAffair::where('national_id', $national_id)->first();
-        if ($studentAffair) {
-            if (password_verify($password, $studentAffair->password)) {
-                return response()->json([
-                    'message' => 'Student Affairs found successfully.',
-                    'data' => $studentAffair,
-                    'statue' => 200
-                ], 200);
-            } else {
-                return response()->json([
-                    'message' => 'Password is incorrect.',
-                    'data' => null,
-                    'statue' => 400
-                ], 400);
-            }
+        $credentials = request()->only('national_id', 'password');
+        $token = Auth::guard('api-affairs')->attempt($credentials);
+        if (!$token) {
+            return $this->returnError("401", "Unauthorized");
         } else {
-            return response()->json([
-                'message' => 'National ID is incorrect.',
-                'data' => null,
-                'statue' => 400
-            ], 400);
+            $studentAffair = StudentAffair::where('national_id', $request->national_id)->first();
+            $studentAffair->api_token = $token;
+            return $this->returnData('Affairs_login', $studentAffair, "Student affair login successfully");
         }
     }
     public function getAllStudentAffairs()
@@ -166,9 +161,9 @@ class StudentAffairController extends Controller
             'statue' => 200
         ], 200);
     }
-    public function delete($id)
+    public function delete(Request $request)
     {
-        $studentAffair = StudentAffair::find($id);
+        $studentAffair = StudentAffair::find($request->id);
         if ($studentAffair) {
             $studentAffair->delete();
             return response()->json([
@@ -197,7 +192,6 @@ class StudentAffairController extends Controller
                 'image' => 'nullable|string',
                 'admin_id' => 'required|integer|exists:admins,id',
                 'password' => 'required|string',
-                'fcm_token' => 'required|string',
                 'responsible_level' => 'required|string',
                 'date_added' => 'required|string',
             ]
@@ -209,5 +203,11 @@ class StudentAffairController extends Controller
                 'statue' => 400
             ], 400);
         }
+    }
+
+    public function logout()
+    {
+        auth()->logout();
+        return $this->returnSuccessMessage('Successfully logged out');
     }
 }

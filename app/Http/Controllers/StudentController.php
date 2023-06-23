@@ -6,9 +6,15 @@ use Illuminate\Http\Request;
 use App\Models\Student;
 use App\Models\Department;
 use App\Services\FCMService;
+use Illuminate\Support\Facades\Auth;
 
 class StudentController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('checkToken:api-students', ['except' => ['login']]);
+    }
 
     public function store(Request $request)
     {
@@ -28,7 +34,6 @@ class StudentController extends Controller
                     'phone_no' => $request->phone_no,
                     'level' => $request->level,
                     'state' => $request->state,
-                    'fcm_token' => $request->fcm_token,
                     'department_code' => $request->department_code,
                     'department_id' => $request->department_id,
                     'password' => bcrypt($request->password),
@@ -72,54 +77,44 @@ class StudentController extends Controller
         ], 200);
     }
 
-    public function destroy($id)
+    public function destroy(Student $student)
     {
-        $student = Student::findOrFail($id);
-        if(!$student){
-            return response()->json([
-                'message' => 'الطالب غير موجود',
-                'data' => null
-            ], 404);
-        }
         $student->delete();
         return response()->json([
-            'message' => 'تم حذف الطالب بنجاح',
+            'message' => 'Student deleted successfully',
             'data' => $student
         ], 201);
     }
-    public function login($national_id, $password)
+
+    public function login(Request $request)
     {
-        $student = Student::where('national_id', $national_id)->first();
-        if ($student) {
-            if (password_verify($password, $student->password)) {
-                $department = Department::find($student->department_id);
-                $student->department_name = $department->name;
-                return response()->json([
-                    'message' => 'Login successful!',
-                    'data' => $student
-                ], 200);
-            } else {
-                return response()->json([
-                    'message' => 'Login failed!',
-                    'data' => $student
-                ], 400);
-            }
+        $credentials = request()->only('national_id', 'password');
+        $token =Auth::guard('api-affairs')->attempt($credentials);
+        if (!$token) {
+            return $this->returnError("401", "Unauthorized");
         } else {
-            return response()->json([
-                'message' => 'Login failed!',
-                'data' => $student
-            ], 400);
+            $student = Student::where('national_id', $request->national_id)->first();
+            $department = Department::find($student->department_id);
+            $student->department_name = $department->name;
+            $student->api_token = $token;
+            return $this->returnData('student_login', $student, "student login successfully");
         }
     }
     // Get all students by department ID and course ID
-    public function getAllStudentByDepartmentId($department_id)
+    public function getAllStudentByDepartmentId(Request $request)
     {
-        $students = Student::where('department_id', $department_id)->get();
+        $students = Student::where('department_id', $request->department_id)->get();
         return response()->json([
             'message' => 'Students retrieved successfully',
             'data' => $students,
             'statue' => 200
         ]);
+    }
+
+    public function logout()
+    {
+        auth()->logout();
+        return $this->returnSuccessMessage('Successfully logged out');
     }
     public function sendNotificationToAllStudents(Request $request)
     {

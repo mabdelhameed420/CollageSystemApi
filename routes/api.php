@@ -35,65 +35,79 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 //? 1==>========================Student Affairs===================
-Route::post('/student-affairs/add', StudentAffairController::class . '@store');
-Route::post('/student-affairs/update', StudentAffairController::class . '@update');
-Route::get('student-affairs/login/{national_id}/{password}', StudentAffairController::class . '@login');
-Route::get('student-affairs/all', StudentAffairController::class . '@getAllStudentAffairs');
-Route::delete('student-affairs/delete/{id}', StudentAffairController::class . '@delete');
+Route::group(['prefix' => 'student-affairs', 'namespace' => ''], function () {
 
+    Route::post('add', 'StudentAffairController@store')->middleware('checkToken:api-admins');
+    Route::post('update', 'StudentAffairController@update');
+    Route::post('login', 'StudentAffairController@login');
+    Route::get('logout', 'StudentAffairController@logout');
+    Route::get('all', 'StudentAffairController@getAllStudentAffairs');
+    Route::delete('delete/{id}', 'StudentAffairController@delete');
+});
 //? 2==>==============================Student============================
+Route::group(['prefix' => 'student', 'namespace' => ''], function () {
 
-Route::post('/student/add', StudentController::class . '@store');
-Route::post('/student/update', StudentController::class . '@update');
-Route::post('/student/delete', StudentController::class . '@delete');
-Route::get('/student/get', StudentController::class . '@index');
-Route::get('student/login/{national_id}/{password}', StudentController::class . '@login');
-Route::get('student/getAllStudentByDepartmentId/{departmentId}', StudentController::class . '@getAllStudentByDepartmentId');
-Route::post('/student/{student_id}/update-fcm-token', [StudentController::class, 'updateFcmTokenByStudentId']);
-Route::get('/student/all', StudentController::class . '@getAllStudents');
-Route::delete('/student/delete/{id}', StudentController::class . '@destroy');
-
+    Route::post('add', 'StudentController@store');
+    Route::post('update', 'StudentController@update');
+    Route::post('delete', 'StudentController@delete');
+    Route::get('get', 'StudentController@index');
+    Route::post('login', 'StudentController@login');
+    Route::post('logout', 'StudentController@logout');
+    Route::get('getAllStudentByDepartmentId/{departmentId}', 'StudentController@getAllStudentByDepartmentId');
+    Route::post('{student_id}/update-fcm-token', 'StudentController@updateFcmTokenByStudentId');
+    Route::get('all', 'StudentController@getAllStudents');
+    Route::delete('delete/{id}', 'StudentController@destroy');
+});
 //? 3==>==================Lecturer============================
-Route::post('/lecturer/add', LecturerController::class . '@store');
-Route::post('/lecturer/update', LecturerController::class . '@update');
-Route::post('/lecturer/delete', LecturerController::class . '@delete');
-Route::get('/lecturer/get', LecturerController::class . '@index');
-Route::get('/lecturer/login/{national_id}/{password}', LecturerController::class . '@login');
-Route::get('/lecturer/getLecturersById/{id}', LecturerController::class . '@getLecturerById');
-Route::get('/lecturer/getClassroomByLecturerId/{id}', LecturerController::class . '@getClassroomByLecturerId');
-Route::get('/lecturer/all', LecturerController::class . '@getAllLecturers');
-Route::delete('/lecturer/delete/{id}', LecturerController::class . '@destroy');
+Route::group(['prefix' => 'lecturer', 'namespace' => 'Api\Auth'], function () {
 
+    Route::post('add', 'LecturerController@store');
+    Route::post('update', 'LecturerController@update');
+    Route::post('delete', 'LecturerController@delete');
+    Route::get('get', 'LecturerController@index');
+    Route::post('login', 'LecturerController@login');
+    Route::get('logout', 'LecturerController@logout');
+    Route::get('getLecturersById/{id}', 'LecturerController@getLecturerById');
+    Route::get('getClassroomByLecturerId/{id}', 'LecturerController@getClassroomByLecturerId');
+    Route::get('all', 'LecturerController@getAllLecturers');
+    Route::delete('delete/{id}', 'LecturerController@destroy');
+});
 //? 4==>================= department ====================
+Route::group(['prefix' => 'department', 'namespace' => ''], function () {
 
-Route::get('/department/get', DepartmentController::class . '@index');
-Route::post('/department/add', DepartmentController::class . '@store');
-Route::post('/department/update', DepartmentController::class . '@update');
-Route::post('/department/delete', DepartmentController::class . '@delete');
-Route::get('/department/all', DepartmentController::class . '@allDepartments');
-Route::get('/department/allCourses/{department_id}', DepartmentController::class . '@getAllCoursesByDepartmentId');
-Route::get('/department/getClassroomIdByDepartmentId/{id}', DepartmentController::class . '@getClassroomIdByDepartmentId');
-Route::get('/department/{id}', DepartmentController::class . '@getDepartmentById');
+    Route::get('get', 'DepartmentController@index');
+    Route::post('add', 'DepartmentController@store');
+    Route::post('update', 'DepartmentController@update');
+    Route::post('delete', 'DepartmentController@delete');
+    Route::get('all', 'DepartmentController@allDepartments');
+    Route::get('allCourses/{department_id}', 'DepartmentController@getAllCoursesByDepartmentId');
+    Route::get('getClassroomIdByDepartmentId/{id}', 'DepartmentController@getClassroomIdByDepartmentId');
+    Route::get('{id}', 'DepartmentController@getDepartmentById');
 
+});
 //? 5==>================= chat ====================
-Route::post('/chat/update', ChatController::class . '@update');
-Route::delete('/chat/delete/{id}', ChatController::class . '@deleteChatById');
-Route::get('/chat/get', ChatController::class . '@index');
-Route::post('/chat/add', ChatController::class . '@store');
-Route::get('/chat/getMessages/{chat_id}', ChatController::class . '@getMessagesByChatId');
-Route::get('/chat/getChatsByStudentId/{student_id}', ChatController::class . '@getChatsByStudentId');
-Route::get('/chat/getChatsByLecturerId/{lecturer_id}', ChatController::class . '@getChatsByLecturerId');
-Route::get('/chat/getChatsByStudentAffairId/{student_affair_id}', ChatController::class . '@getChatsByStudentAffairId');
+Route::group(['prefix' => 'chat', 'namespace' => ''], function () {
 
+    Route::post('update', 'ChatController@update');
+    Route::post('delete/{id}', 'ChatController@delete');
+    Route::get('get', 'ChatController@index');
+    Route::post('add', 'ChatController@store');
+    Route::get('getMessages/{chat_id}', 'ChatController@getMessagesByChatId');
+    Route::get('getChatsByStudentId/{student_id}', 'ChatController@getChatsByStudentId');
+    Route::get('getChatsByLecturerId/{lecturer_id}', 'ChatController@getChatsByLecturerId');
+    Route::get('getChatsByStudentAffairId/{student_affair_id}', 'ChatController@getChatsByStudentAffairId');
+});
 
 //? 6==>================= course ====================
-Route::post('/course/add', CourseController::class . '@store');
-Route::post('/course/update', CourseController::class . '@update');
-Route::get('/course/get', CourseController::class . '@index');
-Route::get('/course/all', CourseController::class . '@getAllCourses');
-Route::get('/course/getCoursesByDepartmentId/{id}', CourseController::class . '@getCoursesByDepartmentId');
-Route::delete('/course/delete/{id}', CourseController::class . '@destroy');
+Route::group(['prefix' => 'course', 'namespace' => ''], function () {
 
+    Route::post('add', 'CourseController@store');
+    Route::post('update', ' CourseController@update');
+    Route::post('delete/{id}', 'CourseController@destroy');
+    Route::get('get', 'CourseController@index');
+    Route::get('all', 'CourseController@getAllCourses');
+    Route::get('getCoursesByDepartmentId/{id}', 'CourseController@getCoursesByDepartmentId');
+});
 
 //? 7==>================= Message ====================
 Route::post('/message/add', MessageController::class . '@store');

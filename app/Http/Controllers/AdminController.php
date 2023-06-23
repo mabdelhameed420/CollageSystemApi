@@ -5,44 +5,17 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Admin;
 use App\Services\FCMService;
+use App\Traits\GeneralTraits;
+use Illuminate\Support\Facades\Auth;
 
 class AdminController extends Controller
 {
+    use GeneralTraits;
 
-    public function store(Request $request)
+    public function __construct()
     {
-        $adminExists = Admin::where('national_id', $request->input('national_id'))->first();
-        if ($adminExists) {
-            return response()->json([
-                'message' => 'Admin already exists!',
-                'data' => $adminExists,
-                'statue' => 201
-            ], 400);
-        } else {
-            $validatedData = $request->validate([
-                'firstname' => 'required',
-                'lastname' => 'required',
-                'national_id' => 'required|unique:admins,national_id',
-                'email' => 'required|email|unique:admins,email',
-                'fcm_token' => 'string|nullable',
-                'phone_no' => 'required',
-                'password' => 'required',
-
-
-
-            ]);
-
-            $admin = Admin::create($validatedData);
-            $admin->password = bcrypt($admin->password);
-            $admin->save();
-            return response()->json([
-                'message' => 'Admin created successfully!',
-                'data' => $admin,
-                'statue' => 201
-            ], 201);
-        }
+        $this->middleware('checkToken:api-admins', ['except' => ['login']]);
     }
-
 
     public function update(Request $request, Admin $admin)
     {
@@ -57,67 +30,44 @@ class AdminController extends Controller
         ]);
 
         $admin->update($validatedData);
-        return response()->json([
-            'message' => 'Admin updated successfully!',
-            'data' => $admin,
-            'statue' => 201
-        ], 200);
+        return $this->returnData('admin_update', $admin, "admin updated successfully");
     }
     public function delete(Request $request)
     {
         $admin = Admin::find($request->input('id'));
         $admin->delete();
 
-        return response()->json([
-            'message' => 'Admin deleted successfully',
-            'data' => $admin,
-            'statue' => 201
-        ], 201);
+        return $this->returnSuccessMessage("Admin deleted successfully");
     }
     public function show(Request $request)
     {
-        $admin = Admin::find($request->input('id'));
+        $admin = Admin::find($request->id);
 
-        return response()->json([
-            'message' => 'Admin found successfully',
-            'data' => $admin,
-            'statue' => 201
-        ], 201);
+        return $this->returnSuccessMessage("Admin found successfully");
     }
     public function index()
     {
         $admins = Admin::all();
-        return response()->json([
-            'message' => 'Admins found successfully',
-            'data' => $admins,
-            'statue' => 201
-        ], 201);
+        return $this->returnData('admins', $admins, "Admin found successfully");
     }
 
-    public function login($national_id, $password)
+    public function login(Request $request)
     {
-        $adminExists = Admin::where('national_id', $national_id)->first();
-        if ($adminExists) {
-            if (password_verify($password, $adminExists->password)) {
-                return response()->json([
-                    'message' => 'Admin logged in successfully!',
-                    'data' => $adminExists,
-                    'statue' => 201
-                ], 200);
-            } else {
-                return response()->json([
-                    'message' => 'Wrong password!',
-                    'data' => null,
-                    'statue' => 400
-                ], 400);
-            }
+        $credentials = request()->only('national_id', 'password');
+        $token =Auth::guard('api-admins')->attempt($credentials);
+        if (!$token) {
+            return $this->returnError("401","Unauthorized");
         } else {
-            return response()->json([
-                'message' => 'Admin does not exist!',
-                'data' => null,
-                'statue' => 400
-            ], 400);
+            $admin = Admin::where('national_id', $request->national_id)->first();
+            $admin->admin_token = $token;
+            return $this->returnData('admin_login', $admin, "Admin login successfully");
         }
+    }
+
+    public function logout()
+    {
+        auth()->logout();
+        return $this->returnSuccessMessage('Successfully logged out');
     }
     public function sendNotificationrToAdmins($id)
     {
