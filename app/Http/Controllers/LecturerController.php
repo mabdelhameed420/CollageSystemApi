@@ -14,11 +14,6 @@ use Illuminate\Support\Facades\Auth;
 class LecturerController extends Controller
 {    use GeneralTraits;
 
-    public function __construct()
-    {
-        $this->middleware('checkToken:api-lecturers', ['except' => ['login']]);
-    }
-
     public function index()
     {
         $lecturers = Lecturer::with('department')->get();

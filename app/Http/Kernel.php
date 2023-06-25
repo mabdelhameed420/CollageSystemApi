@@ -65,5 +65,8 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         // the alias for checkToken middleware we are added
         'checkToken' => \App\Http\Middleware\CheckToken::class,
+        //protect api from csrf attack 
+        'protect.api' => \App\Http\Middleware\ProtectAPI::class,
+
     ];
 }

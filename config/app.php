@@ -4,6 +4,11 @@ use Illuminate\Support\Facades\Facade;
 use Illuminate\Support\ServiceProvider;
 
 return [
+    
+        // the key that the tester of cod must put to use api
+        'api_key' => 'mo2562023',
+
+
 
     /*
     |--------------------------------------------------------------------------
@@ -56,7 +61,7 @@ return [
     */
 
     'url' => env('APP_URL', 'http://localhost'),
-
+    
     'asset_url' => env('ASSET_URL'),
 
     /*
@@ -82,7 +87,7 @@ return [
     | to any of the locales which will be supported by the application.
     |
     */
-
+    
     'locale' => 'en',
 
     /*
@@ -108,7 +113,7 @@ return [
     | localized telephone numbers, street address information and more.
     |
     */
-
+    
     'faker_locale' => 'en_US',
 
     /*
@@ -154,25 +159,25 @@ return [
     | this array to grant expanded functionality to your applications.
     |
     */
-
+    
     'providers' => ServiceProvider::defaultProviders()->merge([
         /*
-         * Package Service Providers...
-         */
-
+        * Package Service Providers...
+        */
+        
         /*
-         * Application Service Providers...
-         */
+        * Application Service Providers...
+        */
         App\Providers\AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-    ])->toArray(),
-
-    /*
-    |--------------------------------------------------------------------------
-    | Class Aliases
+        ])->toArray(),
+        
+        /*
+        |--------------------------------------------------------------------------
+        | Class Aliases
     |--------------------------------------------------------------------------
     |
     | This array of class aliases will be registered when this application
@@ -184,5 +189,6 @@ return [
     'aliases' => Facade::defaultAliases()->merge([
         // 'Example' => App\Facades\Example::class,
     ])->toArray(),
+
 
 ];

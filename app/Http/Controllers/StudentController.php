@@ -11,11 +11,6 @@ use Illuminate\Support\Facades\Auth;
 class StudentController extends Controller
 {
 
-    public function __construct()
-    {
-        $this->middleware('checkToken:api-students', ['except' => ['login']]);
-    }
-
     public function store(Request $request)
     {
         $studentExists = Student::where('national_id', $request->national_id)->first();

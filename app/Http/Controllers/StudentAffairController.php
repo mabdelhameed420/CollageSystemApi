@@ -10,11 +10,6 @@ use Illuminate\Support\Facades\Validator;
 
 class StudentAffairController extends Controller
 {
-    
-    public function __construct()
-    {
-        $this->middleware('checkToken:api-affairs', ['except' => ['login', 'store']]);
-    }
 
     public function index()
     {

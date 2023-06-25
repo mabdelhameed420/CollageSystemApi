@@ -14,7 +14,7 @@ class AdminController extends Controller
 
     public function __construct()
     {
-        $this->middleware('checkToken:api-admins', ['except' => ['login']]);
+        $this->middleware(/*'checkToken:api-admins'*/ ['except' => ['login']]);
     }
 
     public function update(Request $request, Admin $admin)
@@ -28,7 +28,7 @@ class AdminController extends Controller
             'password' => 'required'
 
         ]);
-
+        
         $admin->update($validatedData);
         return $this->returnData('admin_update', $admin, "admin updated successfully");
     }
