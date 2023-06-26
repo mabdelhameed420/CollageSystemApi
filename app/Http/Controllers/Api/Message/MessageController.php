@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\Message;
 
 use App\Events\MessageSent;
+use App\Http\Controllers\Controller;
 use App\Models\Chat;
 use Illuminate\Http\Request;
 use App\Models\Message;
@@ -10,7 +11,6 @@ use App\Models\Student;
 use App\Models\Lecturer;
 use App\Models\Classroom;
 use App\Models\StudentAffair;
-use Mockery\Matcher\Not;
 
 class MessageController extends Controller
 {

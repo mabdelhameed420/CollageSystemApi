@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\Post;
 
 use App\Events\CommentPosted;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-
 use App\Models\Comment;
 use App\Models\Student;
 use App\Models\StudentAffair;

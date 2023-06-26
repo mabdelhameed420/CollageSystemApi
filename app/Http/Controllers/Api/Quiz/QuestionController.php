@@ -1,15 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\Quiz;
 
-use App\Events\QuizAdded;
-use App\Models\Classroom;
-use App\Models\Course;
-use App\Models\Lecturer;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Question;
 use App\Models\Quiz;
-use App\Models\Student;
 
 class QuestionController extends Controller
 {

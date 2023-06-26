@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\Auth;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Admin;
 use App\Services\FCMService;
@@ -14,7 +15,7 @@ class AdminController extends Controller
 
     public function __construct()
     {
-        $this->middleware(/*'checkToken:api-admins'*/ ['except' => ['login']]);
+        $this->middleware('checkToken:api-admins', ['except' => ['login']]);
     }
 
     public function update(Request $request, Admin $admin)

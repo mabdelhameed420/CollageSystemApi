@@ -1,16 +1,15 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\Post;
 
 use App\Events\AddPost;
 use App\Events\ReactPost;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Post;
 use App\Models\StudentAffair;
 use App\Models\Student;
 use App\Models\Lecturer;
-use Illuminate\Routing\Route;
-use Laravel\Ui\Presets\React;
 
 class PostController extends Controller
 {

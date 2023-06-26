@@ -1,13 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\Clsassroom;
 
 use Illuminate\Http\Request;
 use App\Models\Classroom;
 use App\Models\Course;
 use App\Models\Lecturer;
-use App\Models\Student;
-use App\Events\LiveAdded;
+use App\Http\Controllers\Controller;
 
 class ClassroomController extends Controller
 {

@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\Realtime;
 
 use App\Events\LiveAdded;
 use App\Events\QuizAdded;
+use App\Http\Controllers\Controller;
 use App\Models\Classroom;
 use App\Models\Course;
 use App\Models\Lecturer;

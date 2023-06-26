@@ -17,12 +17,12 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-Route::middleware(/*'protect.api'*/)->group(function () {
+Route::middleware('protect.api')->group(function () {
     // Protected API routes
 
     //? 1==>========================Student Affairs===================
-    Route::group(['prefix' => 'student-affairs', 'namespace' => ''], function () {
-        Route::middleware(/*'checkToken:api-admins'*/)->group(function () {
+    Route::group(['prefix' => 'student-affairs','namespace' => 'Api\StudentAffair'], function () {
+        Route::middleware('checkToken:api-admins')->group(function () {
             Route::delete('delete/{id}', 'StudentAffairController@delete');
             Route::post('add', 'StudentAffairController@store');
             Route::get('all', 'StudentAffairController@getAllStudentAffairs');
@@ -32,9 +32,9 @@ Route::middleware(/*'protect.api'*/)->group(function () {
         Route::get('logout', 'StudentAffairController@logout')->middleware(/*'checkToken:api-affairs'*/);
     });
     //? 2==>==============================Student============================
-    Route::group(['prefix' => 'student', 'namespace' => ''], function () {
+    Route::group(['prefix' => 'student', 'namespace' => 'Api\Student'], function () {
 
-        Route::middleware(/*'checkToken:api-affairs'*/)->group(function () {
+        Route::middleware('checkToken:api-affairs')->group(function () {
             Route::post('add', 'StudentController@store');
             Route::post('delete', 'StudentController@delete');
             Route::get('get', 'StudentController@index');
@@ -48,8 +48,8 @@ Route::middleware(/*'protect.api'*/)->group(function () {
         Route::post('logout', 'StudentController@logout')->middleware(/*'checkToken:api-students'*/);
     });
     //? 3==>==================Lecturer============================
-    Route::group(['prefix' => 'lecturer'], function () {
-        Route::group([/*'middleware' => 'checkToken:api-affairs'*/], function () {
+    Route::group(['prefix' => 'lecturer','namespace' => 'Api\Lecturer'], function () {
+        Route::group(['middleware' => 'checkToken:api-affairs'], function () {
 
             Route::post('add', 'LecturerController@store');
             Route::post('delete', 'LecturerController@delete');
@@ -59,13 +59,13 @@ Route::middleware(/*'protect.api'*/)->group(function () {
             Route::get('all', 'LecturerController@getAllLecturers');
             Route::get('get', 'LecturerController@index');
         });
-        Route::get('logout', 'LecturerController@logout')->middleware(/*'checkToken:api-lecturers'*/);
+        Route::get('logout', 'LecturerController@logout')->middleware('checkToken:api-lecturers');
         Route::post('update', 'LecturerController@update');
         Route::post('login', 'LecturerController@login');
     });
     //? 4==>================= department ====================
-    Route::group(['prefix' => 'department'], function () {
-        Route::group([/*'middleware' => 'checkToken:api-affairs'*/], function () {
+    Route::group(['prefix' => 'department','namespace' => 'Api\Department'], function () {
+        Route::group(['middleware' => 'checkToken:api-affairs'], function () {
 
             Route::get('get', 'DepartmentController@index');
             Route::post('add', 'DepartmentController@store');
@@ -78,7 +78,7 @@ Route::middleware(/*'protect.api'*/)->group(function () {
         Route::get('{id}', 'DepartmentController@getDepartmentById');
     });
     //? 5==>================= chat ====================
-    Route::group(['prefix' => 'chat'], function () {
+    Route::group(['prefix' => 'chat','namespace' => 'Api\Chat'], function () {
 
         Route::post('update', 'ChatController@update');
         Route::post('delete/{id}', 'ChatController@delete');
@@ -91,8 +91,8 @@ Route::middleware(/*'protect.api'*/)->group(function () {
     });
 
     //? 6==>================= course ====================
-    Route::group(['prefix' => 'course'], function () {
-        Route::group([/*'middleware' => 'checkToken:api-affairs'*/], function () {
+    Route::group(['prefix' => 'course','namespace' => 'Api\Course'], function () {
+        Route::group(['middleware' => 'checkToken:api-affairs'], function () {
 
             Route::post('add', 'CourseController@store');
             Route::post('update', ' CourseController@update');
@@ -104,7 +104,7 @@ Route::middleware(/*'protect.api'*/)->group(function () {
     });
 
     //? 7==>================= Message ====================
-    Route::group(['prefix' => 'message',], function () {
+    Route::group(['prefix' => 'message','namespace' => 'Api\Message'], function () {
 
         Route::post('add', 'MessageController@store');
         Route::post('update', 'MessageController@update');
@@ -116,7 +116,7 @@ Route::middleware(/*'protect.api'*/)->group(function () {
         Route::get('getMessagesByClassroomId/{classroom_id}', 'MessageController@getMessagesByClassroomId');
     });
     //? 8==>================= Admin ====================
-    Route::group(['prefix' => 'admin'], function () {
+    Route::group(['prefix' => 'admin','namespace' => 'Api\Admin'], function () {
 
         Route::put('update', 'AdminController@update');
         Route::delete('delete', 'AdminController@delete');
@@ -125,7 +125,7 @@ Route::middleware(/*'protect.api'*/)->group(function () {
         Route::post('logout', 'AdminController@logout');
     });
     //? 9==>================= classroom ====================
-    Route::group(['prefix' => 'classroom',], function () {
+    Route::group(['prefix' => 'classroom','namespace' => 'Api\Classroom'], function () {
         Route::group(['middleware' => 'checkToken:api-affairs',], function () {
 
             Route::post('add', 'ClassroomController@store');
@@ -138,7 +138,7 @@ Route::middleware(/*'protect.api'*/)->group(function () {
         Route::get('getClassroomByLecturerId/{lecturer_id}', 'ClassroomController@getClassroomByLecturerId');
     });
     //? 10==>================= post ====================
-    Route::group(['prefix' => 'post',], function () {
+    Route::group(['prefix' => 'post','namespace' => 'Api\Post'], function () {
 
         Route::post('add', 'PostController@store');
         Route::post('update', 'PostController@update');
@@ -158,7 +158,7 @@ Route::middleware(/*'protect.api'*/)->group(function () {
     });
     //? 11==>================= comment ====================
 
-    Route::group(['prefix' => 'comment',], function () {
+    Route::group(['prefix' => 'comment','namespace' => 'Api\Post'], function () {
 
         Route::post('add', 'CommentController@store');
         Route::post('update', 'CommentController@update');
@@ -168,7 +168,7 @@ Route::middleware(/*'protect.api'*/)->group(function () {
     });
     //? 12==>================= reply comment ====================
 
-    Route::group(['prefix' => 'reply-comment',], function () {
+    Route::group(['prefix' => 'reply-comment','namespace' => 'Api\Post'], function () {
 
         Route::post('add', 'ReplyCommentController@store');
         Route::post('update', 'ReplyCommentController@update');
@@ -176,7 +176,7 @@ Route::middleware(/*'protect.api'*/)->group(function () {
         Route::get('get', 'ReplyCommentController@index');
     });
     //? 13==>================= quiz ====================
-    Route::group(['prefix' => 'quiz',/* 'middleware' => 'checkToken:api-lecturers'*/], function () {
+    Route::group(['prefix' => 'quiz','namespace' => 'Api\Quiz','middleware' => 'checkToken:api-lecturers'], function () {
 
         Route::post('add', 'QuizController@store');
         Route::post('update', 'QuizController@update');
@@ -184,8 +184,8 @@ Route::middleware(/*'protect.api'*/)->group(function () {
     });
     Route::get('quiz/get', 'QuizController@index');
     //? 14==>================= question ====================
-    Route::group(['prefix' => 'question',], function () {
-    Route::group([/*'middleware' =>'checkToken:api-lecturers'*/], function () {
+    Route::group(['prefix' => 'question','namespace' => 'Api\Quiz'], function () {
+    Route::group(['middleware' =>'checkToken:api-lecturers'], function () {
 
             Route::post('add', 'QuestionController@store');
             Route::post('update', 'QuestionController@update');
@@ -197,15 +197,15 @@ Route::middleware(/*'protect.api'*/)->group(function () {
     });
 
     //? 15==>================= rating ======================
-    Route::post('/rating/add', 'RatingController@store');
+    Route::namespace('Api\Quiz')->post('/rating/add', 'RatingController@store');
 
     //? 16==>================= notificatins ======================
-    Route::group(['prefix' => 'notification'], function () {
+    Route::group(['prefix' => 'notification','namespace' => 'Api\Notification'], function () {
         Route::post('sendNotification', 'NotificationController@sendNotification');
         Route::post('sendNotificationsForAllStudents', 'NotificationController@sendNotificationForAllUsersByFCMToken');
     });
     //? 17==>================= realtime ======================
-    Route::group(['prefix' => 'realtime'], function () {
+    Route::group(['prefix' => 'realtime','namespace' => 'Api\Realtime'], function () {
 
         Route::get('livestrated/{classroom_id}', 'RealtimeController@stratLive');
         Route::get('finishLive/{classroom_id}', 'RealtimeController@closeLive');
